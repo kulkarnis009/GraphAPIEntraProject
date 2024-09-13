@@ -4,6 +4,9 @@ using Microsoft.Graph;
 using Azure.Identity;
 using Microsoft.Graph.Models;
 using System.Collections.Generic;
+using System.Reflection;
+using System;
+using System.Text;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -21,19 +24,45 @@ public class UsersController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetUsers()
     {
-        // var users = await _graphApiService.GetUsersAsync();
         var users = await _graphClient.Users.GetAsync();
-        return Ok(users.Value);
+        return Ok(users);
     }
 
     [HttpGet("specific")]
-    public async Task<IActionResult> GetSpecificUsers()
-    {
 
-        var user = await _graphClient.Users["1cb7d78f-13a5-4c61-ad96-f08c997a12ec"].GetAsync();
-        Console.WriteLine(user.DisplayName);
-        Console.WriteLine(user.JobTitle);
-        Console.WriteLine(user.Mail);
-        return Ok(user.DisplayName + " "+user.JobTitle+" "+user.Mail);
+
+    public async Task<IActionResult> GetUserDetails()
+    {
+        string[] columnString = new string[]
+        {
+        "DisplayName",
+        "City",
+        "CustomSecurityAttributes",
+        "EmployeeHireDate",
+        "EmployeeId",
+        "JobTitle",
+        "OfficeLocation",
+        "EmployeeType",
+        "Mail"
+        };
+
+        var user = await _graphClient.Users["8dd936cb-c9aa-4930-bbe7-59e63b91c2de"].GetAsync((requestConfiguration) =>
+        {
+            requestConfiguration.QueryParameters.Select = columnString;
+        });
+        // Using reflection to get property values by name
+        var userInfo = new StringBuilder();
+        Type userType = user.GetType();
+        foreach (var columnName in columnString)
+        {
+            PropertyInfo propertyInfo = userType.GetProperty(columnName);
+            if (propertyInfo != null)
+            {
+                var value = propertyInfo.GetValue(user, null);
+                userInfo.AppendLine($"{columnName}: {value}");
+            }
+        }
+        return Ok(userInfo.ToString());
     }
+
 }
