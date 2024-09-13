@@ -10,6 +10,7 @@ public class GraphApiService
 {
     private readonly IConfiguration _configuration;
     private readonly GraphServiceClient _graphClient;
+    public GraphServiceClient GraphClient => _graphClient;
 
     public GraphApiService(IConfiguration configuration)
     {
@@ -27,14 +28,5 @@ public class GraphApiService
 
         return new GraphServiceClient(clientSecretCredential, 
         new[] { "https://graph.microsoft.com/.default" });
-    }
-
-    public async Task<IList<User>> GetUsersAsync()
-    {
-        // Retrieves the UserCollectionResponse from Microsoft Graph
-        var usersResponse = await _graphClient.Users.GetAsync();
-        
-        // Return the list of users from the Value property of the response
-        return usersResponse.Value;
     }
 }
