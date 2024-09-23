@@ -28,10 +28,10 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 
-    [HttpGet("specific")]
+    [HttpGet("specific/{UUID}")]
 
 
-    public async Task<IActionResult> GetUserDetails()
+    public async Task<IActionResult> GetUserDetails(string UUID)
     {
         string[] columnString = new string[]
         {
@@ -46,7 +46,7 @@ public class UsersController : ControllerBase
         "Mail"
         };
 
-        var user = await _graphClient.Users["8dd936cb-c9aa-4930-bbe7-59e63b91c2de"].GetAsync((requestConfiguration) =>
+        var user = await _graphClient.Users[UUID].GetAsync((requestConfiguration) =>
         {
             requestConfiguration.QueryParameters.Select = columnString;
         });
