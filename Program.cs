@@ -19,9 +19,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "GraphAPIExample", Version = "v1" });
 });
 
-// Configure Azure AD settings and Graph API service
-builder.Services.AddSingleton<GraphApiService>();
-
+builder.Services.AddHttpClient<GraphApiService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

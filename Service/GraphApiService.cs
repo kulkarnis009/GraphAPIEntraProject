@@ -1,24 +1,22 @@
 using Azure.Identity;
-using Microsoft.Graph;
-using Microsoft.Graph.Models;
-using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
-
-// Service to connect with Entra ID app using Microsoft Graph API
 public class GraphApiService
 {
     private readonly IConfiguration _configuration;
-    private readonly GraphServiceClient _graphClient;
-    public GraphServiceClient GraphClient => _graphClient;
+    private readonly HttpClient _httpClient;
 
-    public GraphApiService(IConfiguration configuration)
+    public GraphApiService(IConfiguration configuration, HttpClient httpClient)
     {
         _configuration = configuration;
-        _graphClient = GetGraphServiceClient();
+        _httpClient = httpClient;
+        _httpClient.BaseAddress = new Uri(_configuration["AzureAd:GraphApiUrl"]);
     }
 
-    private GraphServiceClient GetGraphServiceClient()
+    public async Task<string> FetchGraphData(string endpoint)
     {
         var clientSecretCredential = new ClientSecretCredential(
             _configuration["AzureAd:TenantId"],
@@ -26,7 +24,11 @@ public class GraphApiService
             _configuration["AzureAd:ClientSecret"]
         );
 
-        return new GraphServiceClient(clientSecretCredential, 
-        new[] { "https://graph.microsoft.com/.default" });
+        var accessToken = await clientSecretCredential.GetTokenAsync(new Azure.Core.TokenRequestContext(new[] { "https://graph.microsoft.com/.default" }));
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.Token);
+
+        var response = await _httpClient.GetAsync(endpoint);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsStringAsync();
     }
 }
