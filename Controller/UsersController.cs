@@ -26,12 +26,40 @@ namespace EntraGreaphAPI.Controllers
             _graphApiService = graphApiService;
         }
 
-            [HttpGet("specificcust/{UUID}")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsers()
+        {
+            var endpoint = $"users";
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            return Content(data, "application/json");
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetSingleUser(string userId)
+        {
+            var endpoint = $"users/{userId}";
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            return Content(data, "application/json");
+        }
+
+        [HttpGet("customattr/{UUID}")]
         public async Task<IActionResult> GetUserDetailsCust(string UUID)
         {
             var endpoint = $"users/{UUID}?$select=customSecurityAttributes";
             var data = await _graphApiService.FetchGraphData(endpoint);
-            return Content(data, "application/json");
+
+            using (JsonDocument doc = JsonDocument.Parse(data))
+            {
+                if (doc.RootElement.TryGetProperty("customSecurityAttributes", out JsonElement customAttributes))
+                {
+                    string resultJson = JsonSerializer.Serialize(customAttributes);
+                    return Content(resultJson, "application/json");
+                }
+                else
+                {
+                    return BadRequest("No custom security attributes available.");
+                }
+            }
         }
 
         // [HttpPost("assignCust")]
