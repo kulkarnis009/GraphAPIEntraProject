@@ -62,6 +62,18 @@ namespace EntraGreaphAPI.Controllers
             }
         }
 
+        [HttpGet("getLogs/{userUUID}/{startDate}/{endDate}/{deviceType}")]
+        public async Task<ActionResult> getLogs(string userUUID, DateTime startDate, DateTime endDate, string deviceType)
+        {
+            var endpoint = $"auditLogs/signIns?$filter=userId eq '{userUUID}' " +
+                   $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ} " +
+                   $"and clientAppUsed eq '{deviceType}'";
+            
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            System.Console.WriteLine("got the logs");
+            return Content(data, "application/json");
+        }
+
         // [HttpPost("assignCust")]
         // public async Task<ActionResult> assignCust()
         // {

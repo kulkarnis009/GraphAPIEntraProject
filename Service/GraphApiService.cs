@@ -28,11 +28,9 @@ namespace EntraGreaphAPI.Service
                 if (_cachedToken.ExpiresOn > now.AddMinutes(5)) // Ensuring at least 5 minutes of validity
                 {
                     System.Console.WriteLine(_cachedToken.ExpiresOn.ToString());
-                    System.Console.WriteLine("in cache");
                     return _cachedToken.Token;
                 }
             }
-            System.Console.WriteLine("not in cache");
             var clientSecretCredential = new ClientSecretCredential(
                 _configuration["AzureAd:TenantId"],
                 _configuration["AzureAd:ClientId"],
