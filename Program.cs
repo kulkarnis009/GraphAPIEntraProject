@@ -1,6 +1,8 @@
+using EntraGreaphAPI.Data;
 using EntraGreaphAPI.Middleware;
 using EntraGreaphAPI.Service;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +10,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.OpenApi.Models;
 using System.Net.Http.Headers;
+using EntraGreaphAPI.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +26,12 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddHttpClient<GraphApiService>();
 builder.Services.AddSingleton<GraphApiService>();
+builder.Services.AddDbContext<DataContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
