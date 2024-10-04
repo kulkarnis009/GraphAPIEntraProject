@@ -12,12 +12,17 @@ namespace EntraGreaphAPI.Data
         }
 
         public DbSet<CustomAttributes> customAttributes { get; set; }
+        public DbSet<Users> users { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<CustomAttributes>()
+                modelBuilder.Entity<CustomAttributes>()
                     .ToTable("custom_attributes")
                     .HasKey(us => us.custom_attribute_id);
+
+                modelBuilder.Entity<Users>()
+                    .ToTable("users")
+                    .HasKey(u => new { u.user_id, u.user_UUID});
   
         }
     }
