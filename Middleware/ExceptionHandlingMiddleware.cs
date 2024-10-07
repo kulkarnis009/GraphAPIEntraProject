@@ -1,4 +1,4 @@
-namespace EntraGreaphAPI.Middleware
+namespace EntraGraphAPI.Middleware
 {
     public class ExceptionHandlingMiddleware
     {

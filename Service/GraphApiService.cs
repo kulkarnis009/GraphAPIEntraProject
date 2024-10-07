@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-namespace EntraGreaphAPI.Service
+namespace EntraGraphAPI.Service
 {
     public class GraphApiService
     {

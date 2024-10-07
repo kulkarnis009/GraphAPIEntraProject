@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace EntraGraphAPI.Models
+namespace EntraGraphAPI.Dto
 {
-        public class CustomAttributes
+    public class ReceiveCustomAttributes
     {
-        [Key]
-        public int custom_attribute_id { get; set; }
         [Required]
         public int user_id { get; set; }
+        [Required]
+        public string id { get; set; }
         public string? AttributeSet { get; set; }
         [Required]
         public string AttributeName { get; set; }

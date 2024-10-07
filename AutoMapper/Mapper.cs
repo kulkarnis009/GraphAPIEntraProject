@@ -1,13 +1,25 @@
 using AutoMapper;
-using EntraGreaphAPI.Models;
+using EntraGraphAPI.Dto;
+using EntraGraphAPI.Models;
 
-namespace EntraGreaphAPI.AutoMapper
+namespace EntraGraphAPI.AutoMapper
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
             CreateMap<ReceiveCustomAttributes, CustomAttributes>();
+            CreateMap<RecieveUsers, Users>();
+            
+            // Mapping for LogAttribute and LogAttributeDTO
+            CreateMap<LogAttributeDTO, LogAttribute>();
+
+            // Mapping for nested DeviceDetail and DeviceDetailDTO
+            CreateMap<DeviceDetailDTO, DeviceDetail>();
+
+            // Mapping for nested Location and LocationDTO
+            CreateMap<LocationDTO, Location>();
+
         }
     }
 }

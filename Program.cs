@@ -1,6 +1,6 @@
-using EntraGreaphAPI.Data;
-using EntraGreaphAPI.Middleware;
-using EntraGreaphAPI.Service;
+using EntraGraphAPI.Data;
+using EntraGraphAPI.Middleware;
+using EntraGraphAPI.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -10,7 +10,7 @@ using Microsoft.Graph;
 using Microsoft.Identity.Client;
 using Microsoft.OpenApi.Models;
 using System.Net.Http.Headers;
-using EntraGreaphAPI.AutoMapper;
+using EntraGraphAPI.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -10,13 +10,18 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Graph.Models;
 using Microsoft.Kiota.Abstractions.Serialization;
-using EntraGreaphAPI.Service;
-using EntraGreaphAPI.Models;
-using EntraGreaphAPI.Data;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Solutions.VirtualEvents.Webinars.GetByUserIdAndRoleWithUserIdWithRole;
+using Microsoft.Graph.Drives.Item.Items.Item.Workbook.Functions.VarA;
+using Newtonsoft.Json;
+using EntraGraphAPI.Wrapper;
+using EntraGraphAPI.Models;
+using EntraGraphAPI.Dto;
+using EntraGraphAPI.Data;
+using EntraGraphAPI.Service;
 
-namespace EntraGreaphAPI.Controllers
+namespace EntraGraphAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -39,22 +44,112 @@ namespace EntraGreaphAPI.Controllers
         {
             var endpoint = $"users";
             var data = await _graphApiService.FetchGraphData(endpoint);
-            return Content(data, "application/json");
+
+            List<RecieveUsers> recieveUsers = new List<RecieveUsers>();
+            DateTime getDate = DateTime.UtcNow;
+
+            using (JsonDocument doc = JsonDocument.Parse(data))
+            {
+                if (doc.RootElement.TryGetProperty("value", out JsonElement recieveUsersList))
+                {
+                        
+                   foreach (JsonElement userElement in recieveUsersList.EnumerateArray())
+                    {
+                        recieveUsers.Add(new RecieveUsers
+                        {
+                            id = userElement.GetProperty("id").GetString(),
+                            givenName = userElement.GetProperty("givenName").GetString(),
+                            surname = userElement.TryGetProperty("surname", out JsonElement surnameElement) ? surnameElement.GetString() : null,
+                            mail = userElement.TryGetProperty("mail", out JsonElement mailElement) ? mailElement.GetString() : null,
+                            jobTitle = userElement.TryGetProperty("jobTitle", out JsonElement jobTitleElement) ? jobTitleElement.GetString() : null,
+                            officeLocation = userElement.TryGetProperty("officeLocation", out JsonElement officeLocationElement) ? officeLocationElement.GetString() : null,
+                            preferredLanguage = userElement.TryGetProperty("preferredLanguage", out JsonElement preferredLanguageElement) ? preferredLanguageElement.GetString() : null,
+                            userPrincipalName = userElement.TryGetProperty("userPrincipalName", out JsonElement userPrincipalNameElement) ? userPrincipalNameElement.GetString() : null,
+
+                        });
+                    }
+                    
+                    // Step 2: Fetch existing usersfrom the database
+                    var recievedUserIds = recieveUsers.Select(r => r.id).ToList();
+                    var existingUsers = await _context.users
+                        .Where(ca => recievedUserIds.Contains(ca.id))
+                        .ToListAsync();
+
+                   // Step 3: Handle Updates and Additions
+                    foreach (var recievedUser in recieveUsers)
+                    {
+                        var existingUser = existingUsers.FirstOrDefault(eu => eu.id == recievedUser.id);
+
+                        if (existingUser != null)
+                        {
+                            // Update the existing user's fields
+                            existingUser.givenName = recievedUser.givenName;
+                            existingUser.surname = recievedUser.surname;
+                            existingUser.mail = recievedUser.mail;
+                            existingUser.jobTitle = recievedUser.jobTitle;
+                            existingUser.officeLocation = recievedUser.officeLocation;
+                            existingUser.preferredLanguage = recievedUser.preferredLanguage;
+                            existingUser.userPrincipalName = recievedUser.userPrincipalName;
+                            // existingUser.LastUpdatedDate = getDate;
+                        }
+                        else
+                        {
+                            // Add new user if it doesn't exist
+                            var addUser = _mapper.Map<Users>(recievedUser);
+                            await _context.users.AddAsync(addUser);
+                        }
+                    }
+
+                    // Step 4: Handle Deletions
+                    // Find users that exist in the database but are not present in the incoming data
+                   // Step 4: Handle Deletions
+                    var usersToDelete = existingUsers
+                        .Where(eu => !recieveUsers.Any(ru => ru.id == eu.id))
+                        .ToList();
+
+                    if (usersToDelete.Any())
+                    {
+                        _context.users.RemoveRange(usersToDelete);
+                    }
+                    await _context.SaveChangesAsync();
+
+                    return Ok("User data added/updated successfully.");
+                }
+                else
+                {
+                    return BadRequest("No user data available.");
+                }
+            }
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetSingleUser(string userId)
+        [HttpGet("UUID/{UUID}")]
+        public async Task<IActionResult> GetSingleUserbyUUID(string UUID)
         {
-            var endpoint = $"users/{userId}";
+            var endpoint = $"users/{UUID}";
             var data = await _graphApiService.FetchGraphData(endpoint);
             return Content(data, "application/json");
         }
 
-        [HttpGet("customattr/{UUID}")]
-        public async Task<ActionResult> GetUserDetailsCust(string UUID)
+        [HttpGet("userID/{userId}")]
+        public async Task<IActionResult> GetSingleUser(int userId)
         {
-            // step 1: getting custom attributes for the user from Entra ID
-            var endpoint = $"users/{UUID}?$select=customSecurityAttributes";
+            var getUUID = await _context.users.Where(u => u.user_id == userId).Select(u => u.id).FirstOrDefaultAsync();
+
+            if(getUUID == null) return BadRequest("invalid user id"); 
+            
+            var endpoint = $"users/{getUUID}";
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            return Content(data, "application/json");
+        }
+
+        [HttpGet("customattr/{userID}")]
+        public async Task<ActionResult> GetUserDetailsCust(int userID)
+        {
+            // step 1: getting customer UUID
+            var getUUID = await _context.users.Where(u => u.user_id == userID).Select(u => u.id).FirstOrDefaultAsync();
+
+            // step 2: getting custom attributes for the user from Entra ID
+            var endpoint = $"users/{getUUID}?$select=customSecurityAttributes";
             var data = await _graphApiService.FetchGraphData(endpoint);
 
             List<ReceiveCustomAttributes> customAttributesList = new List<ReceiveCustomAttributes>();
@@ -74,7 +169,8 @@ namespace EntraGreaphAPI.Controllers
                             {
                                 customAttributesList.Add(new ReceiveCustomAttributes
                                 {
-                                    user_id = UUID,
+                                    user_id = userID,
+                                    id = getUUID,
                                     AttributeSet = setName,
                                     AttributeName = attribute.Name,
                                     AttributeValue = attribute.Value.ToString(),
@@ -84,12 +180,12 @@ namespace EntraGreaphAPI.Controllers
                         }
                     }
                     
-                    // Step 2: Fetch existing attributes for the user from the database
+                    // Step 3: Fetch existing attributes for the user from the database
                     var existingAttributes = await _context.customAttributes
-                        .Where(ca => ca.user_id.Equals(UUID))
+                        .Where(ca => ca.user_id.Equals(userID))
                         .ToListAsync();
 
-                    // Step 3: Handle Updates and Additions
+                    // Step 4: Handle Updates and Additions
                     foreach (var customAttr in customAttributesList)
                     {
                         // Check if the attribute already exists in the database
@@ -111,7 +207,7 @@ namespace EntraGreaphAPI.Controllers
                         }
                     }
 
-                    // Step 4: Handle Deletions
+                    // Step 5: Handle Deletions
                     // Find attributes that exist in the database but are not present in the incoming data
                     var attributesToDelete = existingAttributes
                         .Where(ea => !customAttributesList.Any(ca =>
@@ -135,16 +231,37 @@ namespace EntraGreaphAPI.Controllers
             }
         }
 
-        [HttpGet("getLogs/{userUUID}/{startDate}/{endDate}/{deviceType}")]
-        public async Task<ActionResult> getLogs(string userUUID, DateTime startDate, DateTime endDate, string deviceType)
+        [HttpGet("getLogs/{userId}/{startDate}/{endDate}")]
+        public async Task<ActionResult> getLogs(int userId, DateTime startDate, DateTime endDate)
         {
-            var endpoint = $"auditLogs/signIns?$filter=userId eq '{userUUID}' " +
-                   $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ} " +
-                   $"and clientAppUsed eq '{deviceType}'";
-            
+            var getUUID = await _context.users
+                .Where(u => u.user_id == userId)
+                .Select(u => u.id)
+                .FirstOrDefaultAsync();
+
+            if(getUUID == null) return BadRequest("Invalid user ID");
+
+            var endpoint = $"auditLogs/signIns?$filter=userId eq '{getUUID}' " +
+                        $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ} ";
+
             var data = await _graphApiService.FetchGraphData(endpoint);
-            System.Console.WriteLine("got the logs");
-            return Content(data, "application/json");
+
+            // Deserialize the JSON data to LogAttributeDTO
+            var logs = JsonConvert.DeserializeObject<GraphResponseW>(data);
+
+            // Map each LogAttributeDTO to LogAttribute and store in the database
+            foreach (var logDto in logs.value)
+            {
+                var logEntry = _mapper.Map<LogAttribute>(logDto);
+                logEntry.UserId = userId;  // Set the user_id foreign key
+
+                await _context.logAttributes.AddAsync(logEntry);
+            }
+
+            await _context.SaveChangesAsync();
+
+            Console.WriteLine("Log data saved to database.");
+            return Ok("Log data stored successfully.");
         }
 
         // [HttpPost("assignCust")]
