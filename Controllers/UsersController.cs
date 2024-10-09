@@ -90,7 +90,7 @@ namespace EntraGraphAPI.Controllers
                             existingUser.officeLocation = recievedUser.officeLocation;
                             existingUser.preferredLanguage = recievedUser.preferredLanguage;
                             existingUser.userPrincipalName = recievedUser.userPrincipalName;
-                            // existingUser.LastUpdatedDate = getDate;
+                            existingUser.LastUpdatedDate = getDate;
                         }
                         else
                         {
