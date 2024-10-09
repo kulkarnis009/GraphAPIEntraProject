@@ -151,7 +151,6 @@ namespace EntraGraphAPI.Controllers
             // step 2: getting custom attributes for the user from Entra ID
             var endpoint = $"users/{getUUID}?$select=customSecurityAttributes";
             var data = await _graphApiService.FetchGraphData(endpoint);
-
             List<ReceiveCustomAttributes> customAttributesList = new List<ReceiveCustomAttributes>();
             DateTime getDate = DateTime.UtcNow;
 
@@ -159,6 +158,7 @@ namespace EntraGraphAPI.Controllers
             {
                 if (doc.RootElement.TryGetProperty("customSecurityAttributes", out JsonElement customAttributes))
                 {
+                    if(customAttributes.ValueKind != JsonValueKind.Object) return NoContent();
                     foreach (JsonProperty attributeSet in customAttributes.EnumerateObject())
                     {
                         string setName = attributeSet.Name;
