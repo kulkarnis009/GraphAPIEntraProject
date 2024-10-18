@@ -1,19 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Microsoft.Graph;
-using Azure.Identity;
-using Microsoft.Graph.Models;
-using System.Collections.Generic;
-using System.Reflection;
-using System;
-using System.Text;
 using System.Text.Json;
-using Microsoft.Graph.Models;
-using Microsoft.Kiota.Abstractions.Serialization;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.Solutions.VirtualEvents.Webinars.GetByUserIdAndRoleWithUserIdWithRole;
-using Microsoft.Graph.Drives.Item.Items.Item.Workbook.Functions.VarA;
 using Newtonsoft.Json;
 using EntraGraphAPI.Wrapper;
 using EntraGraphAPI.Models;
@@ -23,9 +11,7 @@ using EntraGraphAPI.Service;
 
 namespace EntraGraphAPI.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseApiController
     {
         private readonly GraphApiService _graphApiService;
         private readonly DataContext _context;
