@@ -233,7 +233,7 @@ namespace EntraGraphAPI.Controllers
             var data = await _graphApiService.FetchGraphData(endpoint);
 
             // Deserialize the JSON data to LogAttributeDTO
-            var logs = JsonConvert.DeserializeObject<GraphResponseW>(data);
+            var logs = JsonConvert.DeserializeObject<GraphResponse>(data);
 
             // Map each LogAttributeDTO to LogAttribute and store in the database
             foreach (var logDto in logs.value)

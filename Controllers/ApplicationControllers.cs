@@ -24,5 +24,13 @@ namespace EntraGraphAPI.Controllers
             var data = await _graphApiService.FetchGraphData(endpoint);
             return Content(data, "application/json");
         }
+
+        [HttpGet("specific/{id}")]
+        public async Task<ActionResult> getSpecificApplication(string id)
+        {
+            var endpoint = $"applications/{id}?$select=id,displayName,customSecurityAttributes";
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            return Content(data, "application/json");
+        }
     }
 }
