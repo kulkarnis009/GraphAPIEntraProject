@@ -250,6 +250,21 @@ namespace EntraGraphAPI.Controllers
             return Ok("Log data stored successfully.");
         }
 
+        [HttpGet("getUserRisk/{userId}")]
+        public async Task<ActionResult> getUserRisk(int userId)
+        {
+            var getUUID = await _context.users
+                .Where(u => u.user_id == userId)
+                .Select(u => u.id)
+                .FirstOrDefaultAsync();
+
+            var endpoint = $"identityProtection/riskyUsers/{getUUID}";
+
+            var data = await _graphApiService.FetchGraphData(endpoint);
+
+            return Content(data, "application/json");
+        }
+
         // [HttpPost("assignCust")]
         // public async Task<ActionResult> assignCust()
         // {
