@@ -13,6 +13,8 @@ namespace EntraGraphAPI.Data
 
         public DbSet<CustomAttributes> customAttributes { get; set; }
         public DbSet<Users> users { get; set;}
+        public DbSet<UsersAttributes> usersAttributes { get; set;}
+
         public DbSet<LogAttribute> logAttributes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,6 +30,10 @@ namespace EntraGraphAPI.Data
             modelBuilder.Entity<Users>()
                 .HasIndex(u => u.id)
                 .IsUnique();
+
+                modelBuilder.Entity<UsersAttributes>()
+                .ToTable("user_attributes")
+                .HasKey(u => u.user_attribute_id); 
                 
             modelBuilder.Entity<LogAttribute>()
                 .ToTable("log_attributes")
