@@ -284,8 +284,8 @@ namespace EntraGraphAPI.Controllers
             }
         }
 
-        [HttpGet("getLogs/{userId}/{startDate}/{endDate}")]
-        public async Task<ActionResult> getLogs(int userId, DateTime startDate, DateTime endDate)
+        [HttpGet("getLogs/{userId}/{hours}")]
+        public async Task<ActionResult> getLogs(int userId, int hours)
         {
             var getUUID = await _context.users
                 .Where(u => u.user_id == userId)
@@ -294,8 +294,12 @@ namespace EntraGraphAPI.Controllers
 
             if (getUUID == null) return BadRequest("Invalid user ID");
 
+            // Calculate the start date-time based on the current time minus the specified number of hours
+            DateTime startDate = DateTime.UtcNow.AddHours(-hours);
+
+            // Format the endpoint with the calculated startDate
             var endpoint = $"auditLogs/signIns?$filter=userId eq '{getUUID}' " +
-                        $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ} ";
+                            $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ}";
 
             var data = await _graphApiService.FetchGraphData(endpoint);
 
