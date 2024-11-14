@@ -11,7 +11,6 @@ namespace EntraGraphAPI.Data
 
         }
 
-        // public DbSet<CustomAttributes> customAttributes { get; set; }
         public DbSet<Users> users { get; set;}
         public DbSet<UsersAttributes> usersAttributes { get; set;}
 
@@ -19,9 +18,6 @@ namespace EntraGraphAPI.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // modelBuilder.Entity<CustomAttributes>()
-            //     .ToTable("custom_attributes")
-            //     .HasKey(us => us.custom_attribute_id);
 
                 modelBuilder.Entity<Users>()
                 .ToTable("users")
