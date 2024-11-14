@@ -11,6 +11,8 @@ namespace EntraGraphAPI.Models
         public string? AttributeName { get; set;}
         public string? AttributeValue { get; set;}
         [Required]
+        public bool isCustom { get; set;}
+        [Required]
         public DateTime LastUpdatedDate { get; set;}
     }
 }

@@ -113,7 +113,7 @@ namespace EntraGraphAPI.Controllers
             // Set user_id here if you have a way to retrieve it; alternatively, link this to the UUID
             int userId = await _context.users.Where(u => u.id == UUID).Select(u => u.user_id).FirstOrDefaultAsync();
 
-            var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId);
+            var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && ua.isCustom == false);
             _context.usersAttributes.RemoveRange(oldRecords);
             await _context.SaveChangesAsync();
 
@@ -144,6 +144,7 @@ namespace EntraGraphAPI.Controllers
                     user_id = userId,
                     AttributeName = attribute.Key,
                     AttributeValue = attributeValue,
+                    isCustom = false,
                     LastUpdatedDate = DateTime.UtcNow
                 });
             }
@@ -167,6 +168,7 @@ namespace EntraGraphAPI.Controllers
                             user_id = userId,
                             AttributeName = riskAttribute,
                             AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
+                            isCustom = false,
                             LastUpdatedDate = DateTime.UtcNow
                         });
                     }
@@ -224,7 +226,7 @@ namespace EntraGraphAPI.Controllers
                                 {
                                     user_id = userID,
                                     id = getUUID,
-                                    AttributeSet = setName,
+                                    // AttributeSet = setName,
                                     AttributeName = attribute.Name,
                                     AttributeValue = attribute.Value.ToString(),
                                     LastUpdatedDate = getDate
@@ -234,8 +236,8 @@ namespace EntraGraphAPI.Controllers
                     }
 
                     // Step 3: Fetch existing attributes for the user from the database
-                    var existingAttributes = await _context.customAttributes
-                        .Where(ca => ca.user_id.Equals(userID))
+                    var existingAttributes = await _context.usersAttributes
+                        .Where(ca => ca.user_id == userID && ca.isCustom == true)
                         .ToListAsync();
 
                     // Step 4: Handle Updates and Additions
@@ -243,7 +245,7 @@ namespace EntraGraphAPI.Controllers
                     {
                         // Check if the attribute already exists in the database
                         var existingAttr = existingAttributes.FirstOrDefault(ea =>
-                            ea.AttributeSet == customAttr.AttributeSet &&
+                            // ea.AttributeSet == customAttr.AttributeSet &&
                             ea.AttributeName == customAttr.AttributeName);
 
                         if (existingAttr != null)
@@ -254,9 +256,10 @@ namespace EntraGraphAPI.Controllers
                         }
                         else
                         {
-                            var addCustomAttributes = _mapper.Map<CustomAttributes>(customAttr);
+                            var addCustomAttributes = _mapper.Map<UsersAttributes>(customAttr);
+                            addCustomAttributes.isCustom = true;
                             // Add new attribute if it doesn't exist in the database
-                            await _context.customAttributes.AddAsync(addCustomAttributes);
+                            await _context.usersAttributes.AddAsync(addCustomAttributes);
                         }
                     }
 
@@ -264,14 +267,14 @@ namespace EntraGraphAPI.Controllers
                     // Find attributes that exist in the database but are not present in the incoming data
                     var attributesToDelete = existingAttributes
                         .Where(ea => !customAttributesList.Any(ca =>
-                            ca.AttributeSet == ea.AttributeSet &&
+                            // ca.AttributeSet == ea.AttributeSet &&
                             ca.AttributeName == ea.AttributeName))
                         .ToList();
 
                     // Remove attributes that are no longer present in the incoming data
                     if (attributesToDelete.Any())
                     {
-                        _context.customAttributes.RemoveRange(attributesToDelete);
+                        _context.usersAttributes.RemoveRange(attributesToDelete);
                     }
                     await _context.SaveChangesAsync();
 
@@ -354,6 +357,7 @@ namespace EntraGraphAPI.Controllers
                             user_id = userId,
                             AttributeName = riskAttribute,
                             AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
+                            isCustom = false,
                             LastUpdatedDate = DateTime.UtcNow
                         });
                     }

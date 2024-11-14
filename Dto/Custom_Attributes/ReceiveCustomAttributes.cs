@@ -8,7 +8,7 @@ namespace EntraGraphAPI.Dto
         public int user_id { get; set; }
         [Required]
         public string id { get; set; }
-        public string? AttributeSet { get; set; }
+        // public string? AttributeSet { get; set; }
         [Required]
         public string AttributeName { get; set; }
         [Required]

@@ -8,7 +8,7 @@ namespace EntraGraphAPI.AutoMapper
     {
         public MappingProfile()
         {
-            CreateMap<ReceiveCustomAttributes, CustomAttributes>();
+            CreateMap<ReceiveCustomAttributes, UsersAttributes>();
             CreateMap<RecieveUsers, Users>();
             
             // Mapping for LogAttribute and LogAttributeDTO
