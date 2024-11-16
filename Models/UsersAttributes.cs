@@ -8,11 +8,13 @@ namespace EntraGraphAPI.Models
         public int user_attribute_id { get; set;}
         [Required]
         public int user_id { get; set;}
-        public string? AttributeName { get; set;}
-        public string? AttributeValue { get; set;}
         [Required]
-        public bool isCustom { get; set;}
+        public int attribute_id { get; set;}
         [Required]
-        public DateTime LastUpdatedDate { get; set;}
+        public string attribute_value { get; set;}
+        [Required]
+        public bool is_custom { get; set;}
+        [Required]
+        public DateTime last_updated_date { get; set;}
     }
 }

@@ -16,6 +16,8 @@ namespace EntraGraphAPI.Data
 
         public DbSet<LogAttribute> logAttributes { get; set; }
 
+        public DbSet<StandardAttributes> standard_attributes { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -57,6 +59,10 @@ namespace EntraGraphAPI.Data
                     loc.Property(l => l.Longitude).HasColumnName("longitude");
                     loc.Property(l => l.Altitude).HasColumnName("altitude");
                 });
+
+            modelBuilder.Entity<StandardAttributes>()
+                .ToTable("standard_attributes")
+                .HasKey(a => a.attribute_id);
 
         }
     }

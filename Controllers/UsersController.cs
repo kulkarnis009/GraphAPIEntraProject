@@ -113,11 +113,14 @@ namespace EntraGraphAPI.Controllers
             // Set user_id here if you have a way to retrieve it; alternatively, link this to the UUID
             int userId = await _context.users.Where(u => u.id == UUID).Select(u => u.user_id).FirstOrDefaultAsync();
 
-            var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && ua.isCustom == false);
+            var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && ua.is_custom == false);
             _context.usersAttributes.RemoveRange(oldRecords);
             await _context.SaveChangesAsync();
 
+            var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+
             var userAttributesList = new List<UsersAttributes>();
+            var standard_attribute = new StandardAttributes();
             foreach (var attribute in userAttributes)
             {
                 // Skip "@odata.context"
@@ -139,13 +142,26 @@ namespace EntraGraphAPI.Controllers
                     attributeValue = attribute.Value?.ToString() ?? "null";
                 }
 
+               if (!standardAttributes.TryGetValue(attribute.Key, out var attributeId))
+                {
+                    standard_attribute = new StandardAttributes
+                    {
+                        attribute_name = attribute.Key,
+                        description = "user"
+                    };
+                    await _context.standard_attributes.AddAsync(standard_attribute);
+                    await _context.SaveChangesAsync();
+                    // Retrieve the newly generated attribute_id and update the dictionary
+                    attributeId = standard_attribute.attribute_id;
+                    standardAttributes[attribute.Key] = attributeId; // Add to dictionary for future use
+                }
                 userAttributesList.Add(new UsersAttributes
                 {
                     user_id = userId,
-                    AttributeName = attribute.Key,
-                    AttributeValue = attributeValue,
-                    isCustom = false,
-                    LastUpdatedDate = DateTime.UtcNow
+                    attribute_id = attributeId,
+                    attribute_value = attributeValue,
+                    is_custom = false,
+                    last_updated_date = DateTime.UtcNow
                 });
             }
 
@@ -163,13 +179,26 @@ namespace EntraGraphAPI.Controllers
                 {
                     if (riskInfo.ContainsKey(riskAttribute))
                     {
+                        if (!standardAttributes.TryGetValue(riskAttribute, out var attributeId))
+                        {
+                            standard_attribute = new StandardAttributes
+                            {
+                                attribute_name = riskAttribute,
+                                description = "user"
+                            };
+                            await _context.standard_attributes.AddAsync(standard_attribute);
+                            await _context.SaveChangesAsync();
+                            // Retrieve the newly generated attribute_id and update the dictionary
+                            attributeId = standard_attribute.attribute_id;
+                            standardAttributes[riskAttribute] = attributeId; // Add to dictionary for future use
+                        }
                         userAttributesList.Add(new UsersAttributes
                         {
                             user_id = userId,
-                            AttributeName = riskAttribute,
-                            AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
-                            isCustom = false,
-                            LastUpdatedDate = DateTime.UtcNow
+                            attribute_id = attributeId,
+                            attribute_value = riskInfo[riskAttribute]?.ToString() ?? "null",
+                            is_custom = false,
+                            last_updated_date = DateTime.UtcNow
                         });
                     }
                 }
@@ -207,7 +236,6 @@ namespace EntraGraphAPI.Controllers
             var endpoint = $"users/{getUUID}?$select=customSecurityAttributes";
             var data = await _graphApiService.FetchGraphData(endpoint);
             List<ReceiveCustomAttributes> customAttributesList = new List<ReceiveCustomAttributes>();
-            DateTime getDate = DateTime.UtcNow;
 
             using (JsonDocument doc = JsonDocument.Parse(data))
             {
@@ -228,8 +256,8 @@ namespace EntraGraphAPI.Controllers
                                     id = getUUID,
                                     // AttributeSet = setName,
                                     AttributeName = attribute.Name,
-                                    AttributeValue = attribute.Value.ToString(),
-                                    LastUpdatedDate = getDate
+                                    attribute_value = attribute.Value.ToString(),
+                                    last_updated_date = DateTime.UtcNow
                                 });
                             }
                         }
@@ -237,47 +265,40 @@ namespace EntraGraphAPI.Controllers
 
                     // Step 3: Fetch existing attributes for the user from the database
                     var existingAttributes = await _context.usersAttributes
-                        .Where(ca => ca.user_id == userID && ca.isCustom == true)
+                        .Where(ca => ca.user_id == userID && ca.is_custom == true)
                         .ToListAsync();
+                    
+                    _context.usersAttributes.RemoveRange(existingAttributes);
+                    await _context.SaveChangesAsync();
+
+                    var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+
+                    var standard_attribute = new StandardAttributes();
 
                     // Step 4: Handle Updates and Additions
                     foreach (var customAttr in customAttributesList)
                     {
-                        // Check if the attribute already exists in the database
-                        var existingAttr = existingAttributes.FirstOrDefault(ea =>
-                            // ea.AttributeSet == customAttr.AttributeSet &&
-                            ea.AttributeName == customAttr.AttributeName);
-
-                        if (existingAttr != null)
+                         if (!standardAttributes.TryGetValue(customAttr.AttributeName, out var attributeId))
                         {
-                            // Update the existing attribute's value and last updated date
-                            existingAttr.AttributeValue = customAttr.AttributeValue;
-                            existingAttr.LastUpdatedDate = getDate;
+                            standard_attribute = new StandardAttributes
+                            {
+                                attribute_name = customAttr.AttributeName,
+                                description = "user"
+                            };
+                            await _context.standard_attributes.AddAsync(standard_attribute);
+                            await _context.SaveChangesAsync();
+                            attributeId = standard_attribute.attribute_id;
+                            standardAttributes[customAttr.AttributeName] = attributeId;
                         }
-                        else
-                        {
-                            var addCustomAttributes = _mapper.Map<UsersAttributes>(customAttr);
-                            addCustomAttributes.isCustom = true;
-                            // Add new attribute if it doesn't exist in the database
-                            await _context.usersAttributes.AddAsync(addCustomAttributes);
-                        }
-                    }
 
-                    // Step 5: Handle Deletions
-                    // Find attributes that exist in the database but are not present in the incoming data
-                    var attributesToDelete = existingAttributes
-                        .Where(ea => !customAttributesList.Any(ca =>
-                            // ca.AttributeSet == ea.AttributeSet &&
-                            ca.AttributeName == ea.AttributeName))
-                        .ToList();
-
-                    // Remove attributes that are no longer present in the incoming data
-                    if (attributesToDelete.Any())
-                    {
-                        _context.usersAttributes.RemoveRange(attributesToDelete);
+                        var addCustomAttributes = _mapper.Map<UsersAttributes>(customAttr);
+                        addCustomAttributes.attribute_id = attributeId;
+                        addCustomAttributes.is_custom = true;
+                        // Add new attribute if it doesn't exist in the database
+                        await _context.usersAttributes.AddAsync(addCustomAttributes);
+                        
                     }
                     await _context.SaveChangesAsync();
-
                     return Ok("Custom attributes added/updated successfully.");
                 }
                 else
@@ -309,6 +330,8 @@ namespace EntraGraphAPI.Controllers
             // Deserialize the JSON data to LogAttributeDTO
             var logs = JsonConvert.DeserializeObject<GraphResponse>(data);
 
+             var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+             
             // Map each LogAttributeDTO to LogAttribute and store in the database
             foreach (var logDto in logs.value)
             {
@@ -324,55 +347,55 @@ namespace EntraGraphAPI.Controllers
             return Ok("Log data stored successfully.");
         }
 
-        [HttpGet("getUserRisk/{userId}")]
-        public async Task<ActionResult> getUserRisk(int userId)
-        {
-            var getUUID = await _context.users
-                .Where(u => u.user_id == userId)
-                .Select(u => u.id)
-                .FirstOrDefaultAsync();
+        // [HttpGet("getUserRisk/{userId}")]
+        // public async Task<ActionResult> getUserRisk(int userId)
+        // {
+        //     var getUUID = await _context.users
+        //         .Where(u => u.user_id == userId)
+        //         .Select(u => u.id)
+        //         .FirstOrDefaultAsync();
 
-            var endpoint = $"identityProtection/riskyUsers/{getUUID}";
+        //     var endpoint = $"identityProtection/riskyUsers/{getUUID}";
 
-            string[] riskAttributes = { "riskLevel", "riskState", "riskDetail", "riskLastUpdatedDateTime" };
+        //     string[] riskAttributes = { "riskLevel", "riskState", "riskDetail", "riskLastUpdatedDateTime" };
             
-            var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && riskAttributes.Contains(ua.AttributeName));
-            _context.usersAttributes.RemoveRange(oldRecords);
-            await _context.SaveChangesAsync();
+        //     var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && riskAttributes.Contains(ua.AttributeName));
+        //     _context.usersAttributes.RemoveRange(oldRecords);
+        //     await _context.SaveChangesAsync();
 
-            var riskData = string.Empty;
-            var userAttributesList = new List<UsersAttributes>();
-            try
-            {
-                riskData = await _graphApiService.FetchGraphData(endpoint);
-                var riskInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(riskData);
+        //     var riskData = string.Empty;
+        //     var userAttributesList = new List<UsersAttributes>();
+        //     try
+        //     {
+        //         riskData = await _graphApiService.FetchGraphData(endpoint);
+        //         var riskInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(riskData);
 
 
-                foreach (var riskAttribute in riskAttributes)
-                {
-                    if (riskInfo.ContainsKey(riskAttribute))
-                    {
-                        userAttributesList.Add(new UsersAttributes
-                        {
-                            user_id = userId,
-                            AttributeName = riskAttribute,
-                            AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
-                            isCustom = false,
-                            LastUpdatedDate = DateTime.UtcNow
-                        });
-                    }
-                }
+        //         foreach (var riskAttribute in riskAttributes)
+        //         {
+        //             if (riskInfo.ContainsKey(riskAttribute))
+        //             {
+        //                 userAttributesList.Add(new UsersAttributes
+        //                 {
+        //                     user_id = userId,
+        //                     AttributeName = riskAttribute,
+        //                     AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
+        //                     isCustom = false,
+        //                     LastUpdatedDate = DateTime.UtcNow
+        //                 });
+        //             }
+        //         }
 
-                // Save to the database
-                await _context.usersAttributes.AddRangeAsync(userAttributesList);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-            }
+        //         // Save to the database
+        //         await _context.usersAttributes.AddRangeAsync(userAttributesList);
+        //         await _context.SaveChangesAsync();
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //     }
 
-            return Content(riskData, "application/json");
-        }
+        //     return Content(riskData, "application/json");
+        // }
 
         // [HttpPost("assignCust")]
         // public async Task<ActionResult> assignCust()

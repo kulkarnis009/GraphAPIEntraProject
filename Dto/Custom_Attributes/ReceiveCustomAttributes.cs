@@ -12,8 +12,8 @@ namespace EntraGraphAPI.Dto
         [Required]
         public string AttributeName { get; set; }
         [Required]
-        public string AttributeValue { get; set; }
+        public string attribute_value { get; set; }
         [Required]
-        public DateTime LastUpdatedDate { get; set; }
+        public DateTime last_updated_date { get; set; }
     }
 }
