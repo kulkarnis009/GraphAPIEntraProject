@@ -331,7 +331,7 @@ namespace EntraGraphAPI.Controllers
             var logs = JsonConvert.DeserializeObject<GraphResponse>(data);
 
              var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
-             
+
             // Map each LogAttributeDTO to LogAttribute and store in the database
             foreach (var logDto in logs.value)
             {
@@ -347,55 +347,76 @@ namespace EntraGraphAPI.Controllers
             return Ok("Log data stored successfully.");
         }
 
-        // [HttpGet("getUserRisk/{userId}")]
-        // public async Task<ActionResult> getUserRisk(int userId)
-        // {
-        //     var getUUID = await _context.users
-        //         .Where(u => u.user_id == userId)
-        //         .Select(u => u.id)
-        //         .FirstOrDefaultAsync();
+        [HttpGet("getUserRisk/{userId}")]
+        public async Task<ActionResult> getUserRisk(int userId)
+        {
+            var getUUID = await _context.users
+                .Where(u => u.user_id == userId)
+                .Select(u => u.id)
+                .FirstOrDefaultAsync();
 
-        //     var endpoint = $"identityProtection/riskyUsers/{getUUID}";
+            var endpoint = $"identityProtection/riskyUsers/{getUUID}";
 
-        //     string[] riskAttributes = { "riskLevel", "riskState", "riskDetail", "riskLastUpdatedDateTime" };
+            string[] riskAttributes = { "riskLevel", "riskState", "riskDetail", "riskLastUpdatedDateTime" };
             
-        //     var oldRecords = _context.usersAttributes.Where(ua => ua.user_id == userId && riskAttributes.Contains(ua.AttributeName));
-        //     _context.usersAttributes.RemoveRange(oldRecords);
-        //     await _context.SaveChangesAsync();
+            var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+            var standard_attribute = new StandardAttributes();
+            foreach (var riskAttribute in riskAttributes)
+            {
+                if (!standardAttributes.TryGetValue(riskAttribute, out var attributeId))
+                {
+                    standard_attribute = new StandardAttributes
+                    {
+                        attribute_name = riskAttribute,
+                        description = "user risk"
+                    };
+                    await _context.standard_attributes.AddAsync(standard_attribute);
+                    await _context.SaveChangesAsync();
+                    attributeId = standard_attribute.attribute_id;
+                    standardAttributes[riskAttribute] = attributeId;
+                }
+            }
 
-        //     var riskData = string.Empty;
-        //     var userAttributesList = new List<UsersAttributes>();
-        //     try
-        //     {
-        //         riskData = await _graphApiService.FetchGraphData(endpoint);
-        //         var riskInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(riskData);
+            var attributeIDs = standardAttributes.Where(sa => riskAttributes.Contains(sa.Key)).Select(sa => sa.Value).ToList();
+
+            var oldRecords = await _context.usersAttributes.Where(ua => ua.user_id == userId && attributeIDs.Contains(ua.attribute_id)).ToListAsync();
+
+            _context.usersAttributes.RemoveRange(oldRecords);
+            await _context.SaveChangesAsync();
+
+            var riskData = string.Empty;
+            var userAttributesList = new List<UsersAttributes>();
+            try
+            {
+                riskData = await _graphApiService.FetchGraphData(endpoint);
+                var riskInfo = JsonConvert.DeserializeObject<Dictionary<string, object>>(riskData);
 
 
-        //         foreach (var riskAttribute in riskAttributes)
-        //         {
-        //             if (riskInfo.ContainsKey(riskAttribute))
-        //             {
-        //                 userAttributesList.Add(new UsersAttributes
-        //                 {
-        //                     user_id = userId,
-        //                     AttributeName = riskAttribute,
-        //                     AttributeValue = riskInfo[riskAttribute]?.ToString() ?? "null",
-        //                     isCustom = false,
-        //                     LastUpdatedDate = DateTime.UtcNow
-        //                 });
-        //             }
-        //         }
+                foreach (var riskAttribute in riskAttributes)
+                {
+                    if (riskInfo.ContainsKey(riskAttribute))
+                    {
+                        userAttributesList.Add(new UsersAttributes
+                        {
+                            user_id = userId,
+                            attribute_id = standardAttributes[riskAttribute],
+                            attribute_value = riskInfo[riskAttribute]?.ToString() ?? "null",
+                            is_custom = false,
+                            last_updated_date = DateTime.UtcNow
+                        });
+                    }
+                }
 
-        //         // Save to the database
-        //         await _context.usersAttributes.AddRangeAsync(userAttributesList);
-        //         await _context.SaveChangesAsync();
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //     }
+                // Save to the database
+                await _context.usersAttributes.AddRangeAsync(userAttributesList);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+            }
 
-        //     return Content(riskData, "application/json");
-        // }
+            return Content(riskData, "application/json");
+        }
 
         // [HttpPost("assignCust")]
         // public async Task<ActionResult> assignCust()
