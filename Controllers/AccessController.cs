@@ -15,10 +15,12 @@ namespace EntraGraphAPI.Controllers
         private readonly AccessDecisionService _accessDecisionService = new AccessDecisionService();
         private readonly DataContext _context;
         private readonly UsersController _usersController;
+        private readonly ApplicationController _applicationController;
         public AccessController(DataContext context, IMapper _mapper, GraphApiService _graphApiService)
         {
             _context = context;
             _usersController = new UsersController(_graphApiService,_context, _mapper);
+            _applicationController = new ApplicationController(_graphApiService,_context,_mapper);
         }
 
 
@@ -64,9 +66,32 @@ namespace EntraGraphAPI.Controllers
                 return Content("<html><body><h1>Access Denied</h1><p>You do not have the required permissions to access this resource.</p></body></html>", "text/html");
             }
 
+            List<String>? getRedirect = await _applicationController.GetReplyUrlsByClientIdAsync(appId);
             // Return an HTML page to display the information
             string htmlResponse = $@"
             <html>
+            <head>
+                <script type='text/javascript'>
+                    // Initialize the countdown value
+                    var countdown = 10;
+
+                    // Function to update the countdown text
+                    function updateCountdown() {{
+                        document.getElementById('countdown').innerText = countdown;
+                        if (countdown === 0) {{
+                            // Redirect to the target URL
+                            window.location.href = '{getRedirect[0] ?? "#"}';
+                        }} else {{
+                            // Decrease the countdown and call the function again after 1 second
+                            countdown--;
+                            setTimeout(updateCountdown, 1000);
+                        }}
+                    }}
+
+                    // Start the countdown when the page loads
+                    window.onload = updateCountdown;
+                </script>
+            </head>
             <body>
                 <h1>Access Granted</h1>
                 <p><strong>ID:</strong> {getAccess.id}</p>
@@ -74,6 +99,8 @@ namespace EntraGraphAPI.Controllers
                 <p><strong>Resource ID:</strong> {getAccess.resource_id}</p>
                 <p><strong>Permission Name:</strong> {getAccess.permission_name}</p>
                 <p><strong>Description:</strong> {getAccess.description ?? "N/A"}</p>
+                <p><strong>Redirect URL:</strong> <a href='{getRedirect[0] ?? "#"}'>{getRedirect[0] ?? "N/A"}</a></p>
+                <p>You will be redirected in <span id='countdown'>10</span> seconds...</p>
             </body>
             </html>";
             return Content(htmlResponse, "text/html");
