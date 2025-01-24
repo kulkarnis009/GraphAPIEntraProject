@@ -20,8 +20,8 @@ namespace EntraGraphAPI.Controllers
         public AccessController(DataContext context, IMapper _mapper, GraphApiService _graphApiService, XacmlPdpService xacmlPdpService)
         {
             _context = context;
-            _usersController = new UsersController(_graphApiService,_context, _mapper);
-            _applicationController = new ApplicationController(_graphApiService,_context,_mapper);
+            _usersController = new UsersController(_graphApiService, _context, _mapper);
+            _applicationController = new ApplicationController(_graphApiService, _context, _mapper);
             _xacmlPdpService = xacmlPdpService;
         }
 
@@ -45,13 +45,13 @@ namespace EntraGraphAPI.Controllers
                 return BadRequest(new { error = "User ID or App ID is missing." });
             }
             // print token information
-            System.Console.WriteLine("User Id : " , userId);
-            System.Console.WriteLine("App Client Id : " , appId);
+            System.Console.WriteLine("User Id : ", userId);
+            System.Console.WriteLine("App Client Id : ", appId);
 
             // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
             System.Console.WriteLine("got attributes");
-            
+
             // Evaluating access with NGAC and XACML engine
             var getAccess = await evaluateAccess(userId, appId);
 
@@ -63,7 +63,7 @@ namespace EntraGraphAPI.Controllers
 
             List<String>? getRedirect = await _applicationController.GetReplyUrlsByClientIdAsync(appId);
             // Return an HTML page to display the information
-            
+
             return Content(htmlResponses.getSuccessResponse(getAccess, getRedirect), "text/html");
 
         }
@@ -71,32 +71,29 @@ namespace EntraGraphAPI.Controllers
         private async Task<evaluateNGACResult?> evaluateAccess(string userId, string appId)
         {
             var getAccessResult = await _context.evaluateAccessResults.FromSqlInterpolated($"Select * from evaluateAccess({userId}, {appId})").FirstOrDefaultAsync();
-            
+
             if (getAccessResult == null) return null;
-            
+
             return getAccessResult;
         }
 
         [HttpPost("evaluateXACML")]
-[HttpPost("evaluate")]
-public async Task<IActionResult> EvaluateAccess([FromBody] AccessRequest request)
-{
-    try
-    {
-        // Call the PDP service
-        var responseXml = await _xacmlPdpService.EvaluatePolicyAsync(request.Role, request.Resource, request.Action);
+        public async Task<IActionResult> EvaluateAccess([FromBody] AccessRequest request)
+        {
+            try
+            {
+                // Call the PDP service
+                var responseXml = await _xacmlPdpService.EvaluatePolicyAsync(request.Role, request.Resource, request.Action);
 
-        // Parse the decision from the response
-        var decision = XACML_functions.ParseDecision(responseXml);
+                // Parse the decision from the response
+                var decision = XACML_functions.ParseDecision(responseXml);
 
-        return Ok(new { decision });
+                return Ok(new { decision });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, new { error = ex.Message });
-    }
-}
-
-    }
-
 }
