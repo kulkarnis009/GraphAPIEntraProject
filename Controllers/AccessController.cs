@@ -53,32 +53,45 @@ namespace EntraGraphAPI.Controllers
             System.Console.WriteLine("got attributes");
 
             // Evaluating access with NGAC and XACML engine
-            var getAccess = await evaluateAccess(userId, appId);
+            var getNGACAccess = await evaluateNGACAccess(userId, appId);
 
-            if (getAccess == null)
+
+            if (getNGACAccess == null)
             {
                 // Return an HTML page for "Access Denied"
                 return Content(htmlResponses.denyResponse, "text/html");
             }
 
+            var responseXml = await _xacmlPdpService.EvaluatePolicyAsync(getNGACAccess.attribute_value, getNGACAccess.resource_name, getNGACAccess.permission_name);
+
+            // Parse the decision from the response
+            var getXACMLAccess = XACML_functions.ParseDecision(responseXml);
+
+            if (getXACMLAccess == null || getXACMLAccess != "Permit")
+            {
+                // Return an HTML page for "Access Denied"
+                return Content(htmlResponses.denyResponseXACML, "text/html");
+            }
+
+
             List<String>? getRedirect = await _applicationController.GetReplyUrlsByClientIdAsync(appId);
             // Return an HTML page to display the information
 
-            return Content(htmlResponses.getSuccessResponse(getAccess, getRedirect), "text/html");
+            return Content(htmlResponses.getSuccessResponse(getNGACAccess,getXACMLAccess, getRedirect), "text/html");
 
         }
 
-        private async Task<evaluateNGACResult?> evaluateAccess(string userId, string appId)
+        private async Task<evaluateNGACResult?> evaluateNGACAccess(string userId, string appId)
         {
             var getAccessResult = await _context.evaluateAccessResults.FromSqlInterpolated($"Select * from evaluateAccess({userId}, {appId})").FirstOrDefaultAsync();
 
             if (getAccessResult == null) return null;
-
+            System.Console.WriteLine(getAccessResult.attribute_value + getAccessResult.resource_name);
             return getAccessResult;
         }
 
         [HttpPost("evaluateXACML")]
-        public async Task<IActionResult> EvaluateAccess([FromBody] AccessRequest request)
+        public async Task<IActionResult> EvaluateXACMLAccess([FromBody] XACMLAccessRequest request)
         {
             try
             {
