@@ -1,10 +1,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using AutoMapper;
+using EntraGraphAPI.Constants;
 using EntraGraphAPI.Data;
+using EntraGraphAPI.Functions;
 using EntraGraphAPI.Models;
 using EntraGraphAPI.Service;
-using EntraGraphAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,23 +13,16 @@ namespace EntraGraphAPI.Controllers
 {
     public class AccessController : BaseApiController
     {
-        private readonly AccessDecisionService _accessDecisionService = new AccessDecisionService();
         private readonly DataContext _context;
         private readonly UsersController _usersController;
         private readonly ApplicationController _applicationController;
-        public AccessController(DataContext context, IMapper _mapper, GraphApiService _graphApiService)
+        private readonly XacmlPdpService _xacmlPdpService;
+        public AccessController(DataContext context, IMapper _mapper, GraphApiService _graphApiService, XacmlPdpService xacmlPdpService)
         {
             _context = context;
             _usersController = new UsersController(_graphApiService,_context, _mapper);
             _applicationController = new ApplicationController(_graphApiService,_context,_mapper);
-        }
-
-
-        [HttpGet("{role}/{docType}/{actions}")]
-        public async Task<ActionResult> GetDocumentAccess(string role, string docType, string actions)
-        {
-            bool isAllowed = _accessDecisionService.DecideAccess(role, docType, actions);
-            return Ok(new { Role = role, DocumentType = docType, Action = actions, Access = isAllowed });
+            _xacmlPdpService = xacmlPdpService;
         }
 
         [HttpPost("authorize")]
@@ -38,13 +32,11 @@ namespace EntraGraphAPI.Controllers
             {
                 return BadRequest(new { error = "The id_token field is required." });
             }
-
             var handler = new JwtSecurityTokenHandler();
             var token = handler.ReadJwtToken(id_token);
 
             // Extract User Object ID (oid)
             var userId = token.Claims.FirstOrDefault(c => c.Type == "oid")?.Value;
-
             // Extract App ID (aud)
             var appId = token.Claims.FirstOrDefault(c => c.Type == "aud")?.Value;
 
@@ -52,58 +44,27 @@ namespace EntraGraphAPI.Controllers
             {
                 return BadRequest(new { error = "User ID or App ID is missing." });
             }
+            // print token information
+            System.Console.WriteLine("User Id : " , userId);
+            System.Console.WriteLine("App Client Id : " , appId);
 
-            System.Console.WriteLine(userId);
-            System.Console.WriteLine(appId);
+            // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
             System.Console.WriteLine("got attributes");
             
+            // Evaluating access with NGAC and XACML engine
             var getAccess = await evaluateAccess(userId, appId);
 
             if (getAccess == null)
             {
                 // Return an HTML page for "Access Denied"
-                return Content("<html><body><h1>Access Denied</h1><p>You do not have the required permissions to access this resource.</p></body></html>", "text/html");
+                return Content(htmlResponses.denyResponse, "text/html");
             }
 
             List<String>? getRedirect = await _applicationController.GetReplyUrlsByClientIdAsync(appId);
             // Return an HTML page to display the information
-            string htmlResponse = $@"
-            <html>
-            <head>
-                <script type='text/javascript'>
-                    // Initialize the countdown value
-                    var countdown = 10;
-
-                    // Function to update the countdown text
-                    function updateCountdown() {{
-                        document.getElementById('countdown').innerText = countdown;
-                        if (countdown === 0) {{
-                            // Redirect to the target URL
-                            window.location.href = '{getRedirect[0] ?? "#"}';
-                        }} else {{
-                            // Decrease the countdown and call the function again after 1 second
-                            countdown--;
-                            setTimeout(updateCountdown, 1000);
-                        }}
-                    }}
-
-                    // Start the countdown when the page loads
-                    window.onload = updateCountdown;
-                </script>
-            </head>
-            <body>
-                <h1>Access Granted</h1>
-                <p><strong>ID:</strong> {getAccess.id}</p>
-                <p><strong>Name:</strong> {getAccess.givenName + " " + getAccess.surname}</p>
-                <p><strong>Resource ID:</strong> {getAccess.resource_id}</p>
-                <p><strong>Permission Name:</strong> {getAccess.permission_name}</p>
-                <p><strong>Description:</strong> {getAccess.description ?? "N/A"}</p>
-                <p><strong>Redirect URL:</strong> <a href='{getRedirect[0] ?? "#"}'>{getRedirect[0] ?? "N/A"}</a></p>
-                <p>You will be redirected in <span id='countdown'>10</span> seconds...</p>
-            </body>
-            </html>";
-            return Content(htmlResponse, "text/html");
+            
+            return Content(htmlResponses.getSuccessResponse(getAccess, getRedirect), "text/html");
 
         }
 
@@ -115,6 +76,27 @@ namespace EntraGraphAPI.Controllers
             
             return getAccessResult;
         }
+
+        [HttpPost("evaluateXACML")]
+[HttpPost("evaluate")]
+public async Task<IActionResult> EvaluateAccess([FromBody] AccessRequest request)
+{
+    try
+    {
+        // Call the PDP service
+        var responseXml = await _xacmlPdpService.EvaluatePolicyAsync(request.Role, request.Resource, request.Action);
+
+        // Parse the decision from the response
+        var decision = XACML_functions.ParseDecision(responseXml);
+
+        return Ok(new { decision });
+    }
+    catch (Exception ex)
+    {
+        return StatusCode(500, new { error = ex.Message });
+    }
+}
+
     }
 
 }

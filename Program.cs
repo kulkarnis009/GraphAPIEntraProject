@@ -14,6 +14,9 @@ using EntraGraphAPI.AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// XACML service injection
+builder.Services.AddHttpClient<XacmlPdpService>();
+
 // Add services to the container.
 builder.Services.AddControllers();
 
