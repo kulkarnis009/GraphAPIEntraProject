@@ -41,6 +41,7 @@ namespace EntraGraphAPI.Constants
                 <p><strong>Permission Name:</strong> {getAccess.permission_name}</p>
                 <p><strong>Description:</strong> {getAccess.description ?? "N/A"}</p>
                 <p><strong>XACML result:</strong> {XACMLResult?? "N/A"}</p>
+                <p><strong>Previous deny count:</strong> {getAccess.denyCount}</p>
                 <p><strong>Redirect URL:</strong> <a href='{getRedirect[0] ?? "#"}'>{getRedirect[0] ?? "N/A"}</a></p>
                 <p>You will be redirected in <span id='countdown'>10</span> seconds...</p>
             </body>
@@ -48,5 +49,47 @@ namespace EntraGraphAPI.Constants
 
             return htmlResponse;
         }
+
+        // public static String denyResponse(evaluateNGACResult? getAccess)
+        // {
+        //     String htmlResponse = $@"
+        //     <html>
+        //     <head>
+        //     </head>
+        //     <body>
+        //         <h1>Access Denied by NGAC</h1>
+        //         <p><strong>ID:</strong> {getAccess.id}</p>
+        //         <p><strong>Name:</strong> {getAccess.givenName + " " + getAccess.surname}</p>
+        //         <p><strong>Resource ID:</strong> {getAccess.resource_id}</p>
+        //         <p><strong>Permission Name:</strong> {getAccess.permission_name}</p>
+        //         <p><strong>Description:</strong> {getAccess.description ?? "N/A"}</p>
+        //         <p><strong>Previous deny count:</strong> {getAccess.denyCount}</p>
+        //     </body>
+        //     </html>";
+
+        //     return htmlResponse;
+        // }
+
+        // public static String denyResponseXACML(evaluateNGACResult getAccess, String? XACMLResult)
+        // {
+        //     String htmlResponse = $@"
+        //     <html>
+        //     <head>
+        //     </head>
+        //     <body>
+        //         <h1>Access Granted</h1>
+        //         <p><strong>ID:</strong> {getAccess.id}</p>
+        //         <p><strong>Name:</strong> {getAccess.givenName + " " + getAccess.surname}</p>
+        //         <p><strong>Resource ID:</strong> {getAccess.resource_id}</p>
+        //         <p><strong>Permission Name:</strong> {getAccess.permission_name}</p>
+        //         <p><strong>Description:</strong> {getAccess.description ?? "N/A"}</p>
+        //         <p><strong>XACML result:</strong> {XACMLResult?? "N/A"}</p>
+        //         <p><strong>Previous deny count:</strong> {getAccess.denyCount}</p>
+                
+        //     </body>
+        //     </html>";
+
+        //     return htmlResponse;
+        // }
     }
 }

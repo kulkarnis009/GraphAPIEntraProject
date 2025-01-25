@@ -18,6 +18,7 @@ namespace EntraGraphAPI.Data
 
         public DbSet<StandardAttributes> standard_attributes { get; set; }
         public DbSet<evaluateNGACResult> evaluateAccessResults{ get; set; }
+        public DbSet<AccessDecision> accessDecisions{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,10 @@ namespace EntraGraphAPI.Data
 
             modelBuilder.Entity<evaluateNGACResult>()
                 .ToFunction("evaluateAccess").HasNoKey();
+
+            modelBuilder.Entity<AccessDecision>()
+                .ToTable("AccessDecisions")
+                .HasKey(a => a.Id);
         }
     }
 }

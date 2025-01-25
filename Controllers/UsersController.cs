@@ -97,7 +97,7 @@ namespace EntraGraphAPI.Controllers
                 }
             }
         }
-
+        
         [HttpGet("UUID/{UUID}")]
         public async Task<IActionResult> GetSingleUserbyUUID(string UUID)
         {
@@ -308,35 +308,151 @@ namespace EntraGraphAPI.Controllers
             }
         }
 
-        [HttpGet("getLogs/{userId}/{hours}")]
-        public async Task<ActionResult> getLogs(int userId, int hours)
+        [HttpGet("customattrUUID/{getUUID}")]
+        public async Task<ActionResult> GetUserDetailsCust(string getUUID)
         {
-            var getUUID = await _context.users
-                .Where(u => u.user_id == userId)
-                .Select(u => u.id)
+            // step 1: getting customer UUID
+            var userID = await _context.users.Where(u => u.id == getUUID).Select(u => u.user_id).FirstOrDefaultAsync();
+
+            // step 2: getting custom attributes for the user from Entra ID
+            var endpoint = $"users/{getUUID}?$select=customSecurityAttributes";
+            var data = await _graphApiService.FetchGraphData(endpoint);
+            List<ReceiveCustomAttributes> customAttributesList = new List<ReceiveCustomAttributes>();
+
+            using (JsonDocument doc = JsonDocument.Parse(data))
+            {
+                if (doc.RootElement.TryGetProperty("customSecurityAttributes", out JsonElement customAttributes))
+                {
+                    if (customAttributes.ValueKind != JsonValueKind.Object) return NoContent();
+                    foreach (JsonProperty attributeSet in customAttributes.EnumerateObject())
+                    {
+                        string setName = attributeSet.Name;
+
+                        foreach (JsonProperty attribute in attributeSet.Value.EnumerateObject())
+                        {
+                            if (!attribute.Name.Equals("@odata.type"))
+                            {
+                                customAttributesList.Add(new ReceiveCustomAttributes
+                                {
+                                    user_id = userID,
+                                    id = getUUID,
+                                    // AttributeSet = setName,
+                                    AttributeName = attribute.Name,
+                                    attribute_value = attribute.Value.ToString(),
+                                    last_updated_date = DateTime.UtcNow
+                                });
+                            }
+                        }
+                    }
+
+                    // Step 3: Fetch existing attributes for the user from the database
+                    var existingAttributes = await _context.usersAttributes
+                        .Where(ca => ca.user_id == userID && ca.is_custom == true)
+                        .ToListAsync();
+                    
+                    _context.usersAttributes.RemoveRange(existingAttributes);
+                    await _context.SaveChangesAsync();
+
+                    var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+
+                    var standard_attribute = new StandardAttributes();
+
+                    // Step 4: Handle Updates and Additions
+                    foreach (var customAttr in customAttributesList)
+                    {
+                         if (!standardAttributes.TryGetValue(customAttr.AttributeName, out var attributeId))
+                        {
+                            standard_attribute = new StandardAttributes
+                            {
+                                attribute_name = customAttr.AttributeName,
+                                description = "user"
+                            };
+                            await _context.standard_attributes.AddAsync(standard_attribute);
+                            await _context.SaveChangesAsync();
+                            attributeId = standard_attribute.attribute_id;
+                            standardAttributes[customAttr.AttributeName] = attributeId;
+                        }
+
+                        var addCustomAttributes = _mapper.Map<UsersAttributes>(customAttr);
+                        addCustomAttributes.attribute_id = attributeId;
+                        addCustomAttributes.is_custom = true;
+                        // Add new attribute if it doesn't exist in the database
+                        await _context.usersAttributes.AddAsync(addCustomAttributes);
+                        
+                    }
+                    await _context.SaveChangesAsync();
+                    return Ok("Custom attributes added/updated successfully.");
+                }
+                else
+                {
+                    return BadRequest("No custom security attributes available.");
+                }
+            }
+        }
+
+        [HttpGet("getLogs/{getUUID}/{clientId}/{hours}")]
+       public async Task<ActionResult> getLogs(string getUUID, string clientId, int hours)
+        {
+            if (string.IsNullOrEmpty(getUUID) || string.IsNullOrEmpty(clientId))
+                return BadRequest("Invalid user ID or client ID");
+
+            // Get the user ID from the database
+            var userId = await _context.users
+                .Where(u => u.id == getUUID)
+                .Select(u => u.user_id)
                 .FirstOrDefaultAsync();
 
-            if (getUUID == null) return BadRequest("Invalid user ID");
+            if (userId == null) return BadRequest("User not found");
 
-            // Calculate the start date-time based on the current time minus the specified number of hours
-            DateTime startDate = DateTime.UtcNow.AddHours(-hours);
+            // Get the last log's datetime for the user and app from the database
+            var lastLogDateTime = await _context.logAttributes
+                .Where(l => l.UserId == userId && l.AppId == clientId)
+                .OrderByDescending(l => l.CreatedDateTime)
+                .Select(l => l.CreatedDateTime)
+                .FirstOrDefaultAsync();
+
+            // Calculate the start date based on the last log or fallback to the specified hours
+            DateTime startDate;
+            if (lastLogDateTime != default(DateTime))
+            {
+                // If the last log exists, use it as the start date
+                startDate = lastLogDateTime.AddSeconds(1);
+            }
+            else
+            {
+                // If no logs exist, calculate the start date using the user-provided hours
+                startDate = DateTime.UtcNow.AddHours(-hours);
+            }
+
+            // Limit the lookback period to a maximum of the user-specified hours
+            DateTime maxLookbackDate = DateTime.UtcNow.AddHours(-hours);
+            if (startDate < maxLookbackDate)
+            {
+                startDate = maxLookbackDate;
+            }
 
             // Format the endpoint with the calculated startDate
             var endpoint = $"auditLogs/signIns?$filter=userId eq '{getUUID}' " +
-                            $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ}";
+                            $"and createdDateTime ge {startDate:yyyy-MM-ddTHH:mm:ssZ} " +
+                            $"and appId eq '{clientId}'";
 
+            // Fetch data from Microsoft Graph API
             var data = await _graphApiService.FetchGraphData(endpoint);
 
             // Deserialize the JSON data to LogAttributeDTO
             var logs = JsonConvert.DeserializeObject<GraphResponse>(data);
 
-             var standardAttributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
+            // Sort the logs in ascending order by createdDateTime
+            var sortedLogs = logs.value.OrderBy(log => log.CreatedDateTime).ToList();
+
+            var standardAttributes = await _context.standard_attributes
+                .ToDictionaryAsync(sa => sa.attribute_name, sa => sa.attribute_id);
 
             // Map each LogAttributeDTO to LogAttribute and store in the database
-            foreach (var logDto in logs.value)
+            foreach (var logDto in sortedLogs)
             {
                 var logEntry = _mapper.Map<LogAttribute>(logDto);
-                logEntry.UserId = userId;  // Set the user_id foreign key
+                logEntry.UserId = userId; // Set the user_id foreign key
 
                 await _context.logAttributes.AddAsync(logEntry);
             }

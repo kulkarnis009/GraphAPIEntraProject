@@ -50,7 +50,13 @@ namespace EntraGraphAPI.Controllers
 
             // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
-            System.Console.WriteLine("got attributes");
+            System.Console.WriteLine("got user attributes");
+
+            await _usersController.GetUserDetailsCust(userId);
+            System.Console.WriteLine("got user custom attributes");
+
+            await _usersController.getLogs(userId,appId,750);
+            System.Console.WriteLine("got log attributes");
 
             // Evaluating access with NGAC and XACML engine
             var getNGACAccess = await evaluateNGACAccess(userId, appId);
@@ -58,7 +64,8 @@ namespace EntraGraphAPI.Controllers
 
             if (getNGACAccess == null)
             {
-                // Return an HTML page for "Access Denied"
+                await LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
+                // Return an HTML page for "Access Denied by NGAC"
                 return Content(htmlResponses.denyResponse, "text/html");
             }
 
@@ -69,7 +76,8 @@ namespace EntraGraphAPI.Controllers
 
             if (getXACMLAccess == null || getXACMLAccess != "Permit")
             {
-                // Return an HTML page for "Access Denied"
+                await LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
+                // Return an HTML page for "Access Denied by XACML"
                 return Content(htmlResponses.denyResponseXACML, "text/html");
             }
 
@@ -77,6 +85,7 @@ namespace EntraGraphAPI.Controllers
             List<String>? getRedirect = await _applicationController.GetReplyUrlsByClientIdAsync(appId);
             // Return an HTML page to display the information
 
+            await LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
             return Content(htmlResponses.getSuccessResponse(getNGACAccess,getXACMLAccess, getRedirect), "text/html");
 
         }
@@ -107,6 +116,22 @@ namespace EntraGraphAPI.Controllers
             {
                 return StatusCode(500, new { error = ex.Message });
             }
+        }
+
+        private async Task LogAccessDecision(string userId, string appId, string decision, bool? IsXACML, string reason)
+        {
+            var accessLog = new AccessDecision
+            {
+                UserId = userId,
+                AppId = appId,
+                Decision = decision,
+                isXACML = IsXACML,
+                Timestamp = DateTime.UtcNow,
+                Metadata = reason
+            };
+
+            await _context.accessDecisions.AddAsync(accessLog);
+            await _context.SaveChangesAsync();
         }
     }
 }

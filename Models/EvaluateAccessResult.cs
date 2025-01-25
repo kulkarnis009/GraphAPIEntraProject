@@ -15,6 +15,7 @@ namespace EntraGraphAPI.Models
         [Required]
         public String permission_name { get; set; }
         public String? description { get; set; }
+        public int denyCount { get; set; }
     }
 
 }
