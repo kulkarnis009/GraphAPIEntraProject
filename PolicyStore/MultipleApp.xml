@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PolicySet
+ xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+ PolicySetId="root"
+ Version="0.1.13"
+ PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:deny-unless-permit">
+ <Description>PolicySet for XACML model</Description>
+
+ <Target />
+
+ <!-- Engineering App Access Policy -->
+ <Policy
+  PolicyId="EngineeringAppAccessPolicy"
+  Version="1.0"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+  
+  <Description>Policy for controlling access to EngineeringApp</Description>
+
+  <Target>
+   <AnyOf>
+    <AllOf>
+     <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">EngineeringApp</AttributeValue>
+      <AttributeDesignator
+       Category="urn:oasis:names:tc:xacml:3.0:resource-category:resource"
+       AttributeId="urn:oasis:names:tc:xacml:1.0:resource:id"
+       DataType="http://www.w3.org/2001/XMLSchema#string"
+       MustBePresent="true" />
+     </Match>
+    </AllOf>
+   </AnyOf>
+  </Target>
+
+  <Rule RuleId="EngineeringAccessRule" Effect="Permit">
+   <Description>Permit access to EngineeringApp if user role is Engineer</Description>
+    <Target>
+    <AnyOf>
+     <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+       <AttributeValue
+        DataType="http://www.w3.org/2001/XMLSchema#string">access</AttributeValue>
+       <AttributeDesignator
+        Category="urn:oasis:names:tc:xacml:3.0:action-category:action"
+        AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id"
+        DataType="http://www.w3.org/2001/XMLSchema#string"
+        MustBePresent="true" />
+      </Match>
+     </AllOf>
+    </AnyOf>
+   </Target>
+
+   <Condition>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
+     <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal" />
+     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Engineer</AttributeValue>
+     <AttributeDesignator
+       AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-role"
+       DataType="http://www.w3.org/2001/XMLSchema#string"
+       MustBePresent="true"
+       Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" />
+    </Apply>
+   </Condition>
+  </Rule>
+ </Policy>
+
+ <!-- Medical App Access Policy -->
+ <Policy
+  PolicyId="MedicalAppAccessPolicy"
+  Version="1.0"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:deny-unless-permit">
+  
+  <Description>Policy for controlling access to MedicalApp</Description>
+
+  <Target>
+   <AnyOf>
+    <AllOf>
+     <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">MedicalApp</AttributeValue>
+      <AttributeDesignator
+       Category="urn:oasis:names:tc:xacml:3.0:resource-category:resource"
+       AttributeId="urn:oasis:names:tc:xacml:1.0:resource:id"
+       DataType="http://www.w3.org/2001/XMLSchema#string"
+       MustBePresent="true" />
+     </Match>
+    </AllOf>
+   </AnyOf>
+  </Target>
+
+  <Rule RuleId="MedicalAccessRule" Effect="Permit">
+   <Description>Permit access to MedicalApp if user role is Doctor</Description>
+
+   <Condition>
+    <Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:any-of">
+     <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal" />
+     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Doctor</AttributeValue>
+     <AttributeDesignator
+       AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-role"
+       DataType="http://www.w3.org/2001/XMLSchema#string"
+       MustBePresent="true"
+       Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" />
+    </Apply>
+   </Condition>
+  </Rule>
+ </Policy>
+</PolicySet>

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PolicySet
+ xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"
+ PolicySetId="root"
+ Version="0.1.33"
+ PolicyCombiningAlgId="urn:oasis:names:tc:xacml:3.0:policy-combining-algorithm:permit-unless-deny">
+ <Description>PolicySet for XACML model with multiple evaluation rules</Description>
+
+ <Target />
+
+ <Policy PolicyId="EngineeringAppAccessPolicy"
+  Version="1.1"
+  RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-unless-deny">
+  
+  <Description>Policy to evaluate access based on multiple rules</Description>
+
+  <Target>
+   <AnyOf>
+    <AllOf>
+     <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">EngineeringApp</AttributeValue>
+      <AttributeDesignator Category="urn:oasis:names:tc:xacml:3.0:resource-category:resource"
+       AttributeId="urn:oasis:names:tc:xacml:1.0:resource:id"
+       DataType="http://www.w3.org/2001/XMLSchema#string"
+       MustBePresent="true" />
+     </Match>
+    </AllOf>
+   </AnyOf>
+  </Target>
+
+  <!-- Rule 1: Engineers can access -->
+  <Rule RuleId="EngineerAccess" Effect="Permit">
+   <Target>
+    <AnyOf>
+     <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Engineer</AttributeValue>
+       <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-role"
+        DataType="http://www.w3.org/2001/XMLSchema#string"
+        MustBePresent="true"
+        Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" />
+      </Match>
+     </AllOf>
+    </AnyOf>
+   </Target>
+
+   <ObligationExpressions>
+    <ObligationExpression ObligationId="urn:oasis:names:tc:xacml:obligation:log-rule-evaluation" FulfillOn="Permit">
+     <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:obligation:rule-success">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">4</AttributeValue>
+     </AttributeAssignmentExpression>
+    </ObligationExpression>
+   </ObligationExpressions>
+  </Rule>
+
+  <!-- Rule 2: Access allowed only during working hours -->
+  <Rule RuleId="WorkingHoursAccess" Effect="Permit">
+   <Target>
+    <AnyOf>
+     <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:time-greater-than-or-equal">
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">09:00:00</AttributeValue>
+       <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time"
+        DataType="http://www.w3.org/2001/XMLSchema#time"
+        MustBePresent="true"
+        Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" />
+      </Match>
+     </AllOf>
+     <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:time-less-than-or-equal">
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#time">18:00:00</AttributeValue>
+       <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:environment:current-time"
+        DataType="http://www.w3.org/2001/XMLSchema#time"
+        MustBePresent="true"
+        Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment" />
+      </Match>
+     </AllOf>
+    </AnyOf>
+   </Target>
+
+   <ObligationExpressions>
+    <ObligationExpression ObligationId="urn:oasis:names:tc:xacml:obligation:log-rule-evaluation" FulfillOn="Permit">
+     <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:obligation:rule-success">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">2</AttributeValue>
+     </AttributeAssignmentExpression>
+    </ObligationExpression>
+   </ObligationExpressions>
+  </Rule>
+
+  <!-- Rule 3: Device must be secure -->
+  <Rule RuleId="DeviceSecureAccess" Effect="Permit">
+   <Target>
+    <AnyOf>
+     <AllOf>
+      <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+       <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Compliant</AttributeValue>
+       <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:subject:device-compliance"
+        DataType="http://www.w3.org/2001/XMLSchema#string"
+        MustBePresent="true"
+        Category="urn:oasis:names:tc:xacml:3.0:subject-category:access-subject" />
+      </Match>
+     </AllOf>
+    </AnyOf>
+   </Target>
+
+   <ObligationExpressions>
+    <ObligationExpression ObligationId="urn:oasis:names:tc:xacml:obligation:log-rule-evaluation" FulfillOn="Permit">
+     <AttributeAssignmentExpression AttributeId="urn:oasis:names:tc:xacml:obligation:rule-success">
+      <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">3</AttributeValue>
+     </AttributeAssignmentExpression>
+    </ObligationExpression>
+   </ObligationExpressions>
+  </Rule>
+
+ </Policy>
+</PolicySet>
