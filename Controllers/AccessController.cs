@@ -133,5 +133,131 @@ namespace EntraGraphAPI.Controllers
             await _context.accessDecisions.AddAsync(accessLog);
             await _context.SaveChangesAsync();
         }
+
+
+//   Standalone NGAC and XACML
+        private async Task<newEvaluateNGACResult?> evaluateNewNGACAccess(string userId, string appId)
+        {
+            var getAccessResult = await _context.newEvaluateAccessResults.FromSqlInterpolated($"Select * from newEvaluateNGACaccess({userId}, {appId})").FirstOrDefaultAsync();
+
+            if (getAccessResult == null) return null;
+            return getAccessResult;
+        }
+
+        [HttpPost("newAuthorize/{userId}/{appId}")]
+        public async Task<ActionResult> newAccess(string userId, string appId)
+        {
+            // refreshing user attributes
+            await _usersController.GetSingleUserbyUUID(userId);
+            System.Console.WriteLine("got user attributes");
+
+            await _usersController.GetUserDetailsCust(userId);
+            System.Console.WriteLine("got user custom attributes");
+
+            await _usersController.getLogs(userId,appId,750);
+            System.Console.WriteLine("got log attributes");
+
+            var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId})").FirstOrDefaultAsync();
+
+            var getNGACAccess = await evaluateNewNGACAccess(userId, appId);
+
+            if(getNGACAccess == null)
+            {
+                await LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
+            }
+
+
+            var responseXml = XACML_Replicate.ValidateXACMLDotnet(
+                new XACML_data
+                {
+                    policyId = 1,  // Corrected colon placement
+                    attributePairs = new Dictionary<string, string> // No semicolon here
+                    {
+                        { "Role", objectAttributes.attribute_value },
+                        { "Resource", objectAttributes.resource_id },
+                        { "Action", objectAttributes.permission_name }
+                    }
+                }
+            );
+                
+            if(responseXml.Result == false)
+            {
+                await LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
+            }
+
+            double totalTrust = ((getNGACAccess.trustFactor * 100) + ((responseXml.AttributesMatchedCount/responseXml.AttributeTotalCount) * 100)) / 2;
+            await LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
+
+
+            return Ok(responseXml);
+        }
+
+// Hybrid NGAC and XACML
+        private async Task<hybridNGAC?> evaluateHybridNGACAccess(string userId, string appId)
+        {
+            var getAccessResult = await _context.hybridNGACs.FromSqlInterpolated($"Select * from hybridNGAC({userId}, {appId})").FirstOrDefaultAsync();
+
+            if (getAccessResult == null) return null;
+            return getAccessResult;
+        }
+
+        [HttpPost("hybrid/{userId}/{appId}")]
+        public async Task<ActionResult> hybridAccess(string userId, string appId)
+        {
+            double totalTrust = 0;
+
+            // refreshing user attributes
+            await _usersController.GetSingleUserbyUUID(userId);
+            System.Console.WriteLine("got user attributes");
+
+            await _usersController.GetUserDetailsCust(userId);
+            System.Console.WriteLine("got user custom attributes");
+
+            await _usersController.getLogs(userId,appId,750);
+            System.Console.WriteLine("got log attributes");
+
+            var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId})").ToListAsync();
+
+            if(objectAttributes != null)
+            {
+
+            var getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
+
+            if(getNGACAccess == null)
+            {
+                await LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
+            }
+
+            var usersAttributes = await _context.getsubjectAttributes.FromSqlInterpolated($"Select * from getSubjectAttributes({userId})").ToListAsync();
+
+            if(usersAttributes != null)
+            {
+
+            var responseXml = XACML_Replicate.ValidateXACMLDotnet(
+                new XACML_data
+                {
+                    policyId = 1,  // Corrected colon placement
+                    attributePairs = new Dictionary<string, string> // No semicolon here
+                    {
+                        { "Role", usersAttributes.Where(ua => ua.attribute_name == "jobTitle").Select(ua => ua.attribute_value).FirstOrDefault()},
+                        { "Resource", appId },
+                        { "Action", objectAttributes.Where(oa => oa.attribute_name == "jobTitle").Select(oa => oa.permission_name).FirstOrDefault() }
+                    }
+                }
+            );
+                
+            if(responseXml.Result == false)
+            {
+                await LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
+            }
+
+            totalTrust = ((getNGACAccess.trustFactor * 100) + ((responseXml.AttributesMatchedCount/responseXml.AttributeTotalCount) * 100)) / 2;
+            await LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
+            }
+            }
+
+
+            return Ok(totalTrust);
+        }
     }
 }

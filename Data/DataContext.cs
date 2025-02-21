@@ -18,7 +18,13 @@ namespace EntraGraphAPI.Data
 
         public DbSet<StandardAttributes> standard_attributes { get; set; }
         public DbSet<evaluateNGACResult> evaluateAccessResults{ get; set; }
+        public DbSet<newEvaluateNGACResult> newEvaluateAccessResults{ get; set; }
+        public DbSet<hybridNGAC> hybridNGACs{ get; set; }
+
         public DbSet<AccessDecision> accessDecisions{ get; set; }
+        public DbSet<getObjectAttributes> getObjectAttributes{ get; set; }
+        public DbSet<getSubjectAttributes> getsubjectAttributes{ get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,6 +78,21 @@ namespace EntraGraphAPI.Data
             modelBuilder.Entity<AccessDecision>()
                 .ToTable("AccessDecisions")
                 .HasKey(a => a.Id);
+
+            modelBuilder.Entity<getObjectAttributes>()
+            .ToFunction("getObjectAttributes")
+            .HasNoKey();
+
+            modelBuilder.Entity<getSubjectAttributes>()
+            .ToFunction("getSubjectAttributes")
+            .HasNoKey();
+
+            modelBuilder.Entity<newEvaluateNGACResult>()
+            .ToFunction("newEvaluateNGACaccess").HasNoKey();
+
+            modelBuilder.Entity<hybridNGAC>()
+            .ToFunction("hybridNGAC").HasNoKey();
+
         }
     }
 }
