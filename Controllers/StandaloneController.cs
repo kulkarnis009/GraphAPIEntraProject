@@ -31,6 +31,7 @@ namespace EntraGraphAPI.Controllers
         [HttpPost("newAuthorize/{userId}/{appId}")]
         public async Task<ActionResult> newAccess(string userId, string appId)
         {
+            double totalTrust = 0;
             OutputData responseXml = null;
             // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
@@ -63,11 +64,11 @@ namespace EntraGraphAPI.Controllers
                 await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
             }
 
-            double totalTrust = ((getNGACAccess.trustFactor * 100) + ((responseXml.AttributesMatchedCount/responseXml.AttributeTotalCount) * 100)) / 2;
+            totalTrust = ((getNGACAccess.trustFactor * 100) + responseXml.XacmlTrustFactor) / 2;
             await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
 
             }
-            return Ok(responseXml);
+            return Ok(totalTrust);
         }
     }
 }

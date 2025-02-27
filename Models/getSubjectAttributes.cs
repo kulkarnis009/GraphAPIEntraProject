@@ -6,6 +6,7 @@ namespace EntraGraphAPI.Models
         public string id { get; set; }
         public int attribute_id { get; set; }
         public string attribute_name { get; set; }
+        public int weight { get; set; }
         public string attribute_value { get; set; }
     }
 }

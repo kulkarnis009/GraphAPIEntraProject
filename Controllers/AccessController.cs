@@ -57,7 +57,7 @@ namespace EntraGraphAPI.Controllers
             await _usersController.GetUserDetailsCust(userId);
             System.Console.WriteLine("got user custom attributes");
 
-            await _usersController.getLogs(userId,appId,750);
+            await _usersController.getLogs(userId, appId, 750);
             System.Console.WriteLine("got log attributes");
 
             // Evaluating access with NGAC and XACML engine
@@ -88,7 +88,7 @@ namespace EntraGraphAPI.Controllers
             // Return an HTML page to display the information
 
             await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
-            return Content(htmlResponses.getSuccessResponse(getNGACAccess,getXACMLAccess, getRedirect), "text/html");
+            return Content(htmlResponses.getSuccessResponse(getNGACAccess, getXACMLAccess, getRedirect), "text/html");
 
         }
 
@@ -121,7 +121,7 @@ namespace EntraGraphAPI.Controllers
         }
 
 
-// Hybrid NGAC and XACML
+        // Hybrid NGAC and XACML
         private async Task<hybridNGAC?> evaluateHybridNGACAccess(string userId, string appId)
         {
             var getAccessResult = await _context.hybridNGACs.FromSqlInterpolated($"Select * from hybridNGAC({userId}, {appId})").FirstOrDefaultAsync();
@@ -148,29 +148,29 @@ namespace EntraGraphAPI.Controllers
 
             var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId})").ToListAsync();
 
-            if(objectAttributes != null)
+            if (objectAttributes != null)
             {
 
                 var usersAttributes = await _context.getsubjectAttributes.FromSqlInterpolated($"Select * from getSubjectAttributes({userId})").ToListAsync();
 
-                if(usersAttributes != null)
+                if (usersAttributes != null)
                 {
                     responseXml = XACML_Replicate.ValidateXACMLDotnet(objectAttributes, usersAttributes, "read");
-                        
-                    if(responseXml.Result == false)
+
+                    if (responseXml.Result == false)
                     {
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
                     }
 
-                    // var getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
+                    var getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
 
-                    // if(getNGACAccess == null)
-                    // {
-                    //     await _logFunction.LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
-                    // }
+                    if (getNGACAccess == null)
+                    {
+                        await _logFunction.LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
+                    }
 
-                    // totalTrust = ((getNGACAccess.trustFactor * 100) + ((responseXml.AttributesMatchedCount/responseXml.AttributeTotalCount) * 100)) / 2;
-                    // await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
+                    totalTrust = ((getNGACAccess.trustFactor * 100) + responseXml.XacmlTrustFactor) / 2;
+                    await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
                 }
             }
 
