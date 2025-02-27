@@ -169,8 +169,11 @@ namespace EntraGraphAPI.Controllers
                     {
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
                     }
+                    var NGACTrustFactor = (getNGACAccess.denyThreshold == 0 || getNGACAccess.denyCount == 0)
+                    ? 1.0
+                    : Math.Max(0, 1 - (double)getNGACAccess.denyCount / (getNGACAccess.denyThreshold + getNGACAccess.permitCount + 1));
 
-                    totalTrust = ((getNGACAccess.trustFactor * 100) + responseXml.XacmlTrustFactor) / 2;
+                    totalTrust = (NGACTrustFactor + responseXml.XacmlTrustFactor) / 2;
                     await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
                 }
             }
