@@ -1,4 +1,5 @@
 using EntraGraphAPI.Data;
+using EntraGraphAPI.Models;
 
 namespace EntraGraphAPI.Functions
 {
@@ -11,27 +12,34 @@ namespace EntraGraphAPI.Functions
 
     public class XACML_Replicate
     {
-        public static OutputData ValidateXACMLDotnet(XACML_data inputData)
+        public static OutputData ValidateXACMLDotnet(List<getObjectAttributes> getObjectAttributes, List<getSubjectAttributes> getSubjectAttributes,  string permissionName)
         {
             var outputData = new OutputData { AttributesMatchedCount = 0 };
 
-            // Find matching policy
-            var policy = policyStore.PolicyData.FirstOrDefault(x => x.policyId == inputData.policyId);
-            if (policy == null) return outputData; // Return default if policy doesn't exist
+            // Step 1: Get the resource ID from object attributes
+            string resourceId = getObjectAttributes.FirstOrDefault()?.resource_id;
+            if (resourceId == null) return outputData; // No valid resource found
 
-            // Count total attributes in policy
+            // Step 2: Find a policy that matches resource_id & permission_name
+            var policy = policyStore.PolicyData
+                .FirstOrDefault(p => p.resource_id == resourceId && p.permission_name == permissionName);
+
+            if (policy == null) return outputData; // No matching policy found
+
+            // Step 3: Convert subject attributes to dictionary
+            Dictionary<string, string> inputData = getSubjectAttributes.ToDictionary(x => x.attribute_name, x => x.attribute_value);
+
+            // Step 4: Compare policy attributes with subject attributes
             outputData.AttributeTotalCount = policy.attributePairs.Count;
-
-            // Check how many attributes match
             foreach (var (key, value) in policy.attributePairs)
             {
-                if (inputData.attributePairs.TryGetValue(key, out var inputValue) && inputValue == value)
+                if (inputData.TryGetValue(key, out var inputValue) && inputValue == value)
                 {
                     outputData.AttributesMatchedCount++;
                 }
             }
 
-            // Decision based on match count
+            // Step 5: Allow access only if all required attributes match
             outputData.Result = outputData.AttributesMatchedCount == outputData.AttributeTotalCount;
 
             return outputData;

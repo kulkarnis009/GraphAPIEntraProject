@@ -1,0 +1,31 @@
+using EntraGraphAPI.Controllers;
+using EntraGraphAPI.Data;
+using EntraGraphAPI.Models;
+
+namespace EntraGraphAPI.Functions
+{
+    public class Log_function: BaseApiController
+    {
+        private readonly DataContext _context;
+        public Log_function(DataContext context)
+        {
+            _context = context;
+        }
+
+        public async Task LogAccessDecision(string userId, string appId, string decision, bool? IsXACML, string reason)
+        {
+            var accessLog = new AccessDecision
+            {
+                UserId = userId,
+                AppId = appId,
+                Decision = decision,
+                isXACML = IsXACML,
+                Timestamp = DateTime.UtcNow,
+                Metadata = reason
+            };
+
+            await _context.accessDecisions.AddAsync(accessLog);
+            await _context.SaveChangesAsync();
+        }
+    }
+}
