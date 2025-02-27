@@ -147,7 +147,9 @@ namespace EntraGraphAPI.Controllers
                     standard_attribute = new StandardAttributes
                     {
                         attribute_name = attribute.Key,
-                        description = "user"
+                        description = "user",
+                        weight = 1,
+                        isEssential = false
                     };
                     await _context.standard_attributes.AddAsync(standard_attribute);
                     await _context.SaveChangesAsync();
@@ -184,7 +186,9 @@ namespace EntraGraphAPI.Controllers
                             standard_attribute = new StandardAttributes
                             {
                                 attribute_name = riskAttribute,
-                                description = "user"
+                                description = "user",
+                                weight = 1,
+                                isEssential = false
                             };
                             await _context.standard_attributes.AddAsync(standard_attribute);
                             await _context.SaveChangesAsync();
@@ -283,7 +287,9 @@ namespace EntraGraphAPI.Controllers
                             standard_attribute = new StandardAttributes
                             {
                                 attribute_name = customAttr.AttributeName,
-                                description = "user"
+                                description = "user",
+                                weight = 1,
+                                isEssential = false
                             };
                             await _context.standard_attributes.AddAsync(standard_attribute);
                             await _context.SaveChangesAsync();
@@ -365,7 +371,9 @@ namespace EntraGraphAPI.Controllers
                             standard_attribute = new StandardAttributes
                             {
                                 attribute_name = customAttr.AttributeName,
-                                description = "user"
+                                description = "user",
+                                weight = 1,
+                                isEssential = false
                             };
                             await _context.standard_attributes.AddAsync(standard_attribute);
                             await _context.SaveChangesAsync();
@@ -484,7 +492,9 @@ namespace EntraGraphAPI.Controllers
                     standard_attribute = new StandardAttributes
                     {
                         attribute_name = riskAttribute,
-                        description = "user risk"
+                        description = "user risk",
+                        weight = 1,
+                        isEssential = false
                     };
                     await _context.standard_attributes.AddAsync(standard_attribute);
                     await _context.SaveChangesAsync();

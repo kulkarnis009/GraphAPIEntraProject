@@ -135,6 +135,7 @@ namespace EntraGraphAPI.Controllers
         {
             double totalTrust = 0;
             OutputData responseXml = null;
+            hybridNGAC getNGACAccess = null;
 
             // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
@@ -162,7 +163,7 @@ namespace EntraGraphAPI.Controllers
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
                     }
 
-                    var getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
+                    getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
 
                     if (getNGACAccess == null)
                     {
@@ -175,7 +176,11 @@ namespace EntraGraphAPI.Controllers
             }
 
 
-            return Ok(responseXml);
+            return Ok(new {
+                XACML_result = responseXml,
+                NGAC_result = getNGACAccess,
+                Final_trust_factor = totalTrust
+                });
         }
     }
 }

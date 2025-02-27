@@ -55,6 +55,7 @@ namespace EntraGraphAPI.Models
         [Required]
         public String permission_name { get; set; }
         public int denyCount {get; set; }
+        public int denyThreshold {get; set; }
         public int accessCount {get; set; }
         public DateTime firstAccessTime { get; set; }
         public DateTime lastAccessTime { get; set; }
