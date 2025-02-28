@@ -20,6 +20,8 @@ namespace EntraGraphAPI.AutoMapper
             // Mapping for nested Location and LocationDTO
             CreateMap<LocationDTO, Location>();
 
+            CreateMap<hybridNGAC, hybridFinalNGAC>();
+
         }
     }
 }

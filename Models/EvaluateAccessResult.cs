@@ -63,4 +63,9 @@ namespace EntraGraphAPI.Models
 
     }
 
+    public class hybridFinalNGAC : hybridNGAC
+    {
+        public double NGACTrustFactor { get; set; }
+    }
+
 }

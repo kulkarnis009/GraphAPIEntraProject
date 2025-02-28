@@ -18,13 +18,15 @@ namespace EntraGraphAPI.Controllers
         private readonly ApplicationController _applicationController;
         private readonly XacmlPdpService _xacmlPdpService;
         private readonly Log_function _logFunction;
-        public AccessController(DataContext context, IMapper _mapper, GraphApiService _graphApiService, XacmlPdpService xacmlPdpService)
+        private readonly IMapper _mapper;
+        public AccessController(DataContext context, IMapper mapper, GraphApiService _graphApiService, XacmlPdpService xacmlPdpService)
         {
             _context = context;
-            _usersController = new UsersController(_graphApiService, _context, _mapper);
-            _applicationController = new ApplicationController(_graphApiService, _context, _mapper);
+            _usersController = new UsersController(_graphApiService, _context, mapper);
+            _applicationController = new ApplicationController(_graphApiService, _context, mapper);
             _xacmlPdpService = xacmlPdpService;
             _logFunction = new Log_function(_context);
+            _mapper = mapper;
         }
 
         [HttpPost("authorize")]
@@ -135,7 +137,7 @@ namespace EntraGraphAPI.Controllers
         {
             double totalTrust = 0;
             OutputData responseXml = null;
-            hybridNGAC getNGACAccess = null;
+            hybridFinalNGAC getNGACAccess = null;
 
             // refreshing user attributes
             await _usersController.GetSingleUserbyUUID(userId);
@@ -163,17 +165,18 @@ namespace EntraGraphAPI.Controllers
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
                     }
 
-                    getNGACAccess = await evaluateHybridNGACAccess(userId, appId);
+                    getNGACAccess = _mapper.Map<hybridFinalNGAC>(await evaluateHybridNGACAccess(userId, appId));
 
                     if (getNGACAccess == null)
                     {
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
                     }
-                    var NGACTrustFactor = (getNGACAccess.denyThreshold == 0 || getNGACAccess.denyCount == 0)
+                    
+                    getNGACAccess.NGACTrustFactor = (getNGACAccess.denyThreshold == 0 || getNGACAccess.denyCount == 0)
                     ? 1.0
                     : Math.Max(0, 1 - (double)getNGACAccess.denyCount / (getNGACAccess.denyThreshold + getNGACAccess.permitCount + 1));
 
-                    totalTrust = (NGACTrustFactor + responseXml.XacmlTrustFactor) / 2;
+                    totalTrust = responseXml.Result ? (getNGACAccess.NGACTrustFactor + responseXml.XacmlTrustFactor) / 2 : 0;
                     await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
                 }
             }
