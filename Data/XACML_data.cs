@@ -29,6 +29,24 @@ namespace EntraGraphAPI.Data
                     { "devExperience", "Confidential" },
                     { "riskLevel", "medium" }
                 }
+            },
+            new XACML_data
+            {
+                resource_id = "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+                permission_name = "write",
+
+                subjectAttributePairs = new Dictionary<string, string>
+                {
+                    { "jobTitle", "Engineer" },
+                    { "department", "Engineering" },
+                    { "writeAccess", "enabled"}
+                },
+
+                objectAttributePairs = new Dictionary<string, string>
+                {
+                    { "devExperience", "Confidential" },
+                    { "riskLevel", "medium" }
+                }
             }
         };
     }

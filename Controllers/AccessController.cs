@@ -124,16 +124,16 @@ namespace EntraGraphAPI.Controllers
 
 
         // Hybrid NGAC and XACML
-        private async Task<hybridNGAC?> evaluateHybridNGACAccess(string userId, string appId)
+        private async Task<hybridNGAC?> evaluateHybridNGACAccess(string userId, string appId, string permissionName)
         {
-            var getAccessResult = await _context.hybridNGACs.FromSqlInterpolated($"Select * from hybridNGAC({userId}, {appId})").FirstOrDefaultAsync();
+            var getAccessResult = await _context.hybridNGACs.FromSqlInterpolated($"Select * from hybridNGAC({userId}, {appId}, {permissionName})").FirstOrDefaultAsync();
 
             if (getAccessResult == null) return null;
             return getAccessResult;
         }
 
-        [HttpPost("hybrid/{userId}/{appId}")]
-        public async Task<ActionResult> hybridAccess(string userId, string appId)
+        [HttpPost("hybrid/{userId}/{appId}/{permission_name}")]
+        public async Task<ActionResult> hybridAccess(string userId, string appId, string permission_name)
         {
             double totalTrust = 0;
             OutputData responseXml = null;
@@ -158,14 +158,17 @@ namespace EntraGraphAPI.Controllers
 
                 if (usersAttributes != null)
                 {
-                    responseXml = XACML_Replicate.ValidateXACMLDotnet(objectAttributes, usersAttributes, "read");
+
+                    var standard_attributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => (sa.weight, sa.isEssential));
+
+                    responseXml = XACML_Replicate.ValidateXACMLDotnet(objectAttributes, usersAttributes, permission_name, standard_attributes);
 
                     if (responseXml.Result == false)
                     {
                         await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
                     }
 
-                    getNGACAccess = _mapper.Map<hybridFinalNGAC>(await evaluateHybridNGACAccess(userId, appId));
+                    getNGACAccess = _mapper.Map<hybridFinalNGAC>(await evaluateHybridNGACAccess(userId, appId, permission_name));
 
                     if (getNGACAccess == null)
                     {

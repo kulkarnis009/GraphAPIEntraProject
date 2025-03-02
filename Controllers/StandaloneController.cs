@@ -28,8 +28,8 @@ namespace EntraGraphAPI.Controllers
             return getAccessResult;
         }
 
-        [HttpPost("newAuthorize/{userId}/{appId}")]
-        public async Task<ActionResult> newAccess(string userId, string appId)
+        [HttpPost("newAuthorize/{userId}/{appId}/{permission_name}")]
+        public async Task<ActionResult> newAccess(string userId, string appId, string permission_name)
         {
             double totalTrust = 0;
             OutputData responseXml = null;
@@ -57,7 +57,9 @@ namespace EntraGraphAPI.Controllers
             }
 
 
-            responseXml = XACML_Replicate.ValidateXACMLDotnet(objectAttributes, usersAttributes, "read");
+            var standard_attributes = await _context.standard_attributes.ToDictionaryAsync(sa => sa.attribute_name, sa => (sa.weight, sa.isEssential));
+
+            responseXml = XACML_Replicate.ValidateXACMLDotnet(objectAttributes, usersAttributes, permission_name, standard_attributes);
                 
             if(responseXml.Result == false)
             {
