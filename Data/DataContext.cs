@@ -24,6 +24,8 @@ namespace EntraGraphAPI.Data
         public DbSet<AccessDecision> accessDecisions{ get; set; }
         public DbSet<getObjectAttributes> getObjectAttributes{ get; set; }
         public DbSet<getSubjectAttributes> getsubjectAttributes{ get; set; }
+        public DbSet<Scenarios> scenarios{ get; set; }
+        public DbSet<Evaluation_results> evaluation_Results{ get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -93,6 +95,9 @@ namespace EntraGraphAPI.Data
             modelBuilder.Entity<hybridNGAC>()
             .ToFunction("hybridNGAC").HasNoKey();
 
+            modelBuilder.Entity<Scenarios>().ToTable("scenarios").HasKey(a => a.scenario_id);
+
+            modelBuilder.Entity<Evaluation_results>().ToTable("evaluation_results").HasKey(a => a.result_id);
         }
     }
 }

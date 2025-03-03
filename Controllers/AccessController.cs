@@ -132,9 +132,15 @@ namespace EntraGraphAPI.Controllers
             return getAccessResult;
         }
 
-        [HttpPost("hybrid/{userId}/{appId}/{permission_name}")]
-        public async Task<ActionResult> hybridAccess(string userId, string appId, string permission_name)
+        [HttpPost("hybrid/{scenarioId}")]
+        public async Task<ActionResult> hybridAccess(int scenarioId)
         {
+            var scenario = await _context.scenarios.Where(x => x.scenario_id == scenarioId).FirstOrDefaultAsync();
+            
+            string userId = scenario.user_id;
+            string appId = scenario.resource_id;
+            string permission_name = scenario.permission_name;
+
             double totalTrust = 0;
             OutputData responseXml = null;
             hybridFinalNGAC getNGACAccess = null;
@@ -165,14 +171,33 @@ namespace EntraGraphAPI.Controllers
 
                     if (responseXml.Result == false)
                     {
-                        await _logFunction.LogAccessDecision(userId, appId, "Deny", true, "XACML evaluation failed.");
+                        await _logFunction.LogModelDecisions(new Evaluation_results
+                        {
+                            scenario_id = scenarioId,
+                            model_type = "Hybrid",
+                            result_date = DateTime.Now,
+                            xacml_result = false,
+                            xacmlTrustFactor = 0,
+                            final_trust_factor = 0,
+                            final_result = false
+                        });
+                        return BadRequest("failed at XACML");
                     }
 
                     getNGACAccess = _mapper.Map<hybridFinalNGAC>(await evaluateHybridNGACAccess(userId, appId, permission_name));
 
                     if (getNGACAccess == null)
                     {
-                        await _logFunction.LogAccessDecision(userId, appId, "Deny", false, "NGAC evaluation failed.");
+                        await _logFunction.LogModelDecisions(new Evaluation_results
+                        {
+                            scenario_id = scenarioId,
+                            model_type = "Hybrid",
+                            result_date = DateTime.Now,
+                            ngacTrustFactor = 0,
+                            final_trust_factor = 0,
+                            final_result = false
+                        });
+                        return BadRequest("failed at NGAC");
                     }
                     
                     getNGACAccess.NGACTrustFactor = (getNGACAccess.denyThreshold == 0 || getNGACAccess.denyCount == 0)
@@ -180,7 +205,27 @@ namespace EntraGraphAPI.Controllers
                     : Math.Max(0, 1 - (double)getNGACAccess.denyCount / (getNGACAccess.denyThreshold + getNGACAccess.permitCount + 1));
 
                     totalTrust = responseXml.Result ? (getNGACAccess.NGACTrustFactor + responseXml.XacmlTrustFactor) / 2 : 0;
-                    await _logFunction.LogAccessDecision(userId, appId, "Permit", null, "Authorize success.");
+                    
+                    await _logFunction.LogModelDecisions(new Evaluation_results
+                        {
+                            scenario_id = scenarioId,
+                            model_type = "Hybrid",
+                            result_date = DateTime.Now,
+                            xacml_result = responseXml.Result,
+                            subjectWeightedScore = responseXml.SubjectWeightedScore,
+                            subjectTotalWeight = responseXml.SubjectTotalWeight,
+                            objectWeightedScore = responseXml.ObjectWeightedScore,
+                            objectTotalWeight = responseXml.ObjectTotalWeight,
+                            xacmlTrustFactor = (float) responseXml.XacmlTrustFactor,
+                            unmatchedEssentialCount = responseXml.UnmatchedEssentialCount,
+                            ngacTrustFactor = (float) getNGACAccess.NGACTrustFactor,
+                            denyCount = getNGACAccess.denyCount,
+                            denyThreshold = getNGACAccess.denyThreshold,
+                            permitCount = getNGACAccess.permitCount,
+                            accessCount = getNGACAccess.accessCount,
+                            final_trust_factor = (float) totalTrust,
+                            final_result = totalTrust > 0.7 ? true : false
+                        });
                 }
             }
 
@@ -190,6 +235,16 @@ namespace EntraGraphAPI.Controllers
                 NGAC_result = getNGACAccess,
                 Final_trust_factor = totalTrust
                 });
+        }
+
+        [HttpPost("testScenarios")]
+        public async Task<ActionResult> testScenarios()
+        {
+            for (int i = 1; i <= 5; i++)
+            {
+                await hybridAccess(i);
+            }
+            return Ok("all done");
         }
     }
 }

@@ -27,5 +27,11 @@ namespace EntraGraphAPI.Functions
             await _context.accessDecisions.AddAsync(accessLog);
             await _context.SaveChangesAsync();
         }
+
+        public async Task LogModelDecisions(Evaluation_results evaluation_Results)
+        {
+            await _context.evaluation_Results.AddAsync(evaluation_Results);
+            await _context.SaveChangesAsync();
+        }
     }
 }

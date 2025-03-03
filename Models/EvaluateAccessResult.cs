@@ -58,8 +58,8 @@ namespace EntraGraphAPI.Models
         public int denyThreshold {get; set; }
         public int permitCount {get; set; }
         public int accessCount {get; set; }
-        public DateTime firstAccessTime { get; set; }
-        public DateTime lastAccessTime { get; set; }
+        public DateTime? firstAccessTime { get; set; }
+        public DateTime? lastAccessTime { get; set; }
 
     }
 
