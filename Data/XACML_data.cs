@@ -63,6 +63,40 @@ namespace EntraGraphAPI.Data
                     { "devExperience", "Confidential" },
                     { "riskLevel", "medium" }
                 }
+            },
+            new XACML_data
+            {
+                resource_id = "832b229a-5b81-47a0-8b9b-9e67607f841e",
+                permission_name = "read",
+
+                subjectAttributePairs = new Dictionary<string, string>
+                {
+
+                },
+
+                objectAttributePairs = new Dictionary<string, string>
+                {
+                    { "department", "sales" },
+                    { "riskLevel", "medium" }
+                }
+            },
+            new XACML_data
+            {
+                resource_id = "832b229a-5b81-47a0-8b9b-9e67607f841e",
+                permission_name = "report",
+
+                subjectAttributePairs = new Dictionary<string, string>
+                {
+                    { "jobTitle", "Sales Associate" },
+                    { "department", "Sales" },
+                    {"officeLocation", "Prince george"}
+                },
+
+                objectAttributePairs = new Dictionary<string, string>
+                {
+                    { "department", "sales" },
+                    { "riskLevel", "high" }
+                }
             }
         };
     }

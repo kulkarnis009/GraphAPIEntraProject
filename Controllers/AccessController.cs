@@ -132,14 +132,14 @@ namespace EntraGraphAPI.Controllers
             return getAccessResult;
         }
 
-        [HttpPost("hybrid/{scenarioId}")]
-        public async Task<ActionResult> hybridAccess(int scenarioId)
+        [HttpPost("hybrid/{scenarioId}/{userId}/{appId}/{permission_name}")]
+        public async Task<ActionResult> hybridAccess(int scenarioId, string userId, string appId, string permission_name)
         {
-            var scenario = await _context.scenarios.Where(x => x.scenario_id == scenarioId).FirstOrDefaultAsync();
+            // var scenario = await _context.scenarios.Where(x => x.scenario_id == scenarioId).FirstOrDefaultAsync();
             
-            string userId = scenario.user_id;
-            string appId = scenario.resource_id;
-            string permission_name = scenario.permission_name;
+            // string userId = scenario.user_id;
+            // string appId = scenario.resource_id;
+            // string permission_name = scenario.permission_name;
 
             double totalTrust = 0;
             OutputData responseXml = null;
@@ -252,9 +252,10 @@ namespace EntraGraphAPI.Controllers
         [HttpPost("testScenarios")]
         public async Task<ActionResult> testScenarios()
         {
-            for (int i = 1; i <= 5; i++)
+            var getScenarios = await _context.scenarios.ToListAsync();
+            foreach (var scenario in getScenarios)
             {
-                await hybridAccess(i);
+                await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name);
             }
             return Ok("all done");
         }
