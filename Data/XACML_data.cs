@@ -21,7 +21,8 @@ namespace EntraGraphAPI.Data
                 subjectAttributePairs = new Dictionary<string, string>
                 {
                     { "jobTitle", "Engineer" },
-                    { "department", "Engineering" }
+                    { "department", "Engineering" },
+                    { "anomoly","added"}
                 },
 
                 objectAttributePairs = new Dictionary<string, string>
@@ -39,7 +40,8 @@ namespace EntraGraphAPI.Data
                 {
                     { "jobTitle", "Engineer" },
                     { "department", "Engineering" },
-                    { "writeAccess", "enabled"}
+                    { "writeAccess", "enabled"},
+                    { "anomoly","added"}
                 },
 
                 objectAttributePairs = new Dictionary<string, string>
@@ -55,7 +57,7 @@ namespace EntraGraphAPI.Data
 
                 subjectAttributePairs = new Dictionary<string, string>
                 {
-
+                    { "anomoly","added"}
                 },
 
                 objectAttributePairs = new Dictionary<string, string>
@@ -89,7 +91,8 @@ namespace EntraGraphAPI.Data
                 {
                     { "jobTitle", "Sales Associate" },
                     { "department", "Sales" },
-                    {"officeLocation", "Prince george"}
+                    {"officeLocation", "Prince george"},
+                    { "anomoly","added"}
                 },
 
                 objectAttributePairs = new Dictionary<string, string>

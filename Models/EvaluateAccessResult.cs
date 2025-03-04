@@ -31,13 +31,13 @@ namespace EntraGraphAPI.Models
         public string? resource_name { get; set; }
         [Required]
         public String permission_name { get; set; }
-        public int denyCount {get; set; }
-        public int accessCount {get; set; }
-        public DateTime firstAccessTime { get; set; }
-        public DateTime lastAccessTime { get; set; }
-        public int matchedAttributes { get; set; }
-        public int totalAttributes { get; set; }
-        public double trustFactor { get; set; }
+        public int? denyCount {get; set; }
+        public int? accessCount {get; set; }
+        public DateTime? firstAccessTime { get; set; }
+        public DateTime? lastAccessTime { get; set; }
+        public int? matchedAttributes { get; set; }
+        public int? totalAttributes { get; set; }
+        public double? trustFactor { get; set; }
 
     }
 

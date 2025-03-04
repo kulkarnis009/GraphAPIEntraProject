@@ -6,9 +6,9 @@ namespace EntraGraphAPI.Models
     {
         [Key]
         public int scenario_id { get; set; }  // Primary Key
-        public string? resource_id { get; set; }
-        public string? user_id { get; set; }
-        public string? permission_name { get; set; }
+        public string resource_id { get; set; }
+        public string user_id { get; set; }
+        public string permission_name { get; set; }
     }
 
     public class Evaluation_results

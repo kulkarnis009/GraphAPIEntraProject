@@ -257,7 +257,7 @@ namespace EntraGraphAPI.Controllers
             {
                 await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name);
             }
-            return Ok("all done");
+            return Ok(getScenarios.Count + " done");
         }
     }
 }

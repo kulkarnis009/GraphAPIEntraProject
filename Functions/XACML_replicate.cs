@@ -114,5 +114,51 @@ namespace EntraGraphAPI.Functions
 
         return outputData;
     }
+
+        public static bool ValidateXACMLSimple(
+        List<getObjectAttributes> getObjectAttributes, 
+        List<getSubjectAttributes> getSubjectAttributes, 
+        string permissionName)
+        {
+            // Step 1: Get the resource ID from object attributes
+            string resourceId = getObjectAttributes.FirstOrDefault()?.resource_id;
+            if (resourceId == null) return false; // No valid resource found → Deny
+
+            // Step 2: Find a policy that matches resource_id & permission_name
+            var policy = policyStore.PolicyData
+                .FirstOrDefault(p => p.resource_id == resourceId && p.permission_name == permissionName);
+
+            if (policy == null) return false; // No matching policy found → Deny
+
+            // Step 3: Convert object attributes to dictionary
+            Dictionary<string, string> objectData = getObjectAttributes
+                .ToDictionary(x => x.attribute_name, x => x.attribute_value);
+
+            // Step 4: Convert subject attributes to dictionary
+            Dictionary<string, string> subjectData = getSubjectAttributes
+                .ToDictionary(x => x.attribute_name, x => x.attribute_value);
+
+            // Step 5: Check if all subject attributes match
+            foreach (var (attrName, requiredValue) in policy.subjectAttributePairs)
+            {
+                if (!subjectData.TryGetValue(attrName, out var actualValue) || actualValue != requiredValue)
+                {
+                    return false; // Subject attribute mismatch → Deny
+                }
+            }
+
+            // Step 6: Check if all object attributes match
+            foreach (var (attrName, requiredValue) in policy.objectAttributePairs)
+            {
+                if (!objectData.TryGetValue(attrName, out var actualValue) || actualValue != requiredValue)
+                {
+                    return false; // Object attribute mismatch → Deny
+                }
+            }
+
+            // If all attributes match → Permit
+            return true;
+        }
+
     }
 }
