@@ -155,7 +155,7 @@ namespace EntraGraphAPI.Controllers
             // await _usersController.getLogs(userId,appId,750);
             // System.Console.WriteLine("got log attributes");
 
-            var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId})").ToListAsync();
+            var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId}, {permission_name})").ToListAsync();
 
             if (objectAttributes != null)
             {
@@ -177,7 +177,12 @@ namespace EntraGraphAPI.Controllers
                             model_type = "Hybrid",
                             result_date = DateTime.Now,
                             xacml_result = false,
-                            xacmlTrustFactor = 0,
+                            subjectWeightedScore = responseXml.SubjectWeightedScore,
+                            subjectTotalWeight = responseXml.SubjectTotalWeight,
+                            objectWeightedScore = responseXml.ObjectWeightedScore,
+                            objectTotalWeight = responseXml.ObjectTotalWeight,
+                            unmatchedEssentialCount = responseXml.UnmatchedEssentialCount,
+                            xacmlTrustFactor = (float) responseXml.XacmlTrustFactor,
                             final_trust_factor = 0,
                             final_result = false
                         });
@@ -193,6 +198,13 @@ namespace EntraGraphAPI.Controllers
                             scenario_id = scenarioId,
                             model_type = "Hybrid",
                             result_date = DateTime.Now,
+                            xacml_result = responseXml.Result,
+                            subjectWeightedScore = responseXml.SubjectWeightedScore,
+                            subjectTotalWeight = responseXml.SubjectTotalWeight,
+                            objectWeightedScore = responseXml.ObjectWeightedScore,
+                            objectTotalWeight = responseXml.ObjectTotalWeight,
+                            xacmlTrustFactor = (float) responseXml.XacmlTrustFactor,
+                            unmatchedEssentialCount = responseXml.UnmatchedEssentialCount,
                             ngacTrustFactor = 0,
                             final_trust_factor = 0,
                             final_result = false
