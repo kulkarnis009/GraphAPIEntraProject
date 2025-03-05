@@ -18,6 +18,9 @@ namespace EntraGraphAPI.Models
         public int? scenario_id { get; set; }  // Foreign Key
         public string? model_type { get; set; }
         public DateTime? result_date { get; set; }
+        public float? xacml_threshold { get; set; }
+        public float? xacml_constant { get; set; }
+        public float? ngac_constant { get; set; }
         public bool? xacml_result { get; set; }
         public int? subjectWeightedScore { get; set; }
         public int? subjectTotalWeight { get; set; }
