@@ -1,0 +1,67 @@
+[
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "writeAccess": "enabled",
+            "anomoly": "added"
+        },
+        "subjectNumericConditions": {
+            "devExperience": { "Min": 3, "Max": 5 }
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        },
+        "objectNumericConditions": {}
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "read",
+        "subjectAttributePairs": {},
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    }
+]

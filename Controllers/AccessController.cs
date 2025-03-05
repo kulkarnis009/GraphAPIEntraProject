@@ -216,7 +216,7 @@ namespace EntraGraphAPI.Controllers
                     ? 1.0
                     : Math.Max(0, 1 - (double)getNGACAccess.denyCount / (getNGACAccess.denyThreshold + getNGACAccess.permitCount + 1));
 
-                    totalTrust = responseXml.Result ? (getNGACAccess.NGACTrustFactor + responseXml.XacmlTrustFactor) / 2 : 0;
+                    totalTrust = responseXml.Result ? ((responseXml.XacmlTrustFactor * formulaConstants.xacmlConstant) + (getNGACAccess.NGACTrustFactor * formulaConstants.NGACConstant)) / (formulaConstants.xacmlConstant + formulaConstants.NGACConstant) : 0;
                     
                     await _logFunction.LogModelDecisions(new Evaluation_results
                         {
