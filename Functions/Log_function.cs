@@ -1,3 +1,4 @@
+using EntraGraphAPI.Constants;
 using EntraGraphAPI.Controllers;
 using EntraGraphAPI.Data;
 using EntraGraphAPI.Models;
@@ -30,6 +31,7 @@ namespace EntraGraphAPI.Functions
 
         public async Task LogModelDecisions(Evaluation_results evaluation_Results)
         {
+            evaluation_Results.test_run_id = formulaConstants.test_run_id;
             await _context.evaluation_Results.AddAsync(evaluation_Results);
             await _context.SaveChangesAsync();
         }

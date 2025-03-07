@@ -35,5 +35,6 @@ namespace EntraGraphAPI.Models
         public int? accessCount { get; set; }
         public float? final_trust_factor { get; set; }
         public bool? final_result { get; set; }
+        public int? test_run_id { get; set; }
     }
 }

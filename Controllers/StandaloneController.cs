@@ -1,4 +1,5 @@
 using AutoMapper;
+using EntraGraphAPI.Constants;
 using EntraGraphAPI.Data;
 using EntraGraphAPI.Functions;
 using EntraGraphAPI.Models;
@@ -37,18 +38,21 @@ namespace EntraGraphAPI.Controllers
         }
 
         [HttpPost("newAuthorize/{scenarioId}/{userId}/{appId}/{permission_name}")]
-        public async Task<ActionResult> standaloneModels(int scenarioId, string userId, string appId, string permission_name)
+        public async Task<ActionResult> standaloneModels(int scenarioId, string userId, string appId, string permission_name, bool isTest = false)
         {
             bool responseXml;
-            // refreshing user attributes
-            await _usersController.GetSingleUserbyUUID(userId);
-            System.Console.WriteLine("got user attributes");
+            if(!isTest)
+            {
+                // refreshing user attributes
+                await _usersController.GetSingleUserbyUUID(userId);
+                System.Console.WriteLine("got user attributes");
 
-            await _usersController.GetUserDetailsCust(userId);
-            System.Console.WriteLine("got user custom attributes");
+                await _usersController.GetUserDetailsCust(userId);
+                System.Console.WriteLine("got user custom attributes");
 
-            // await _usersController.getLogs(userId, appId, 750);
-            // System.Console.WriteLine("got log attributes");
+                // await _usersController.getLogs(userId, appId, 750);
+                // System.Console.WriteLine("got log attributes");
+            }
 
             var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId}, {permission_name})").ToListAsync();
 
@@ -110,13 +114,29 @@ namespace EntraGraphAPI.Controllers
             return Ok("done");
         }
 
-        [HttpPost("testScenarios")]
-        public async Task<ActionResult> testScenarios()
+        [HttpPost("testScenarios/{test_run_id}")]
+        public async Task<ActionResult> testScenarios(int test_run_id)
         {
+            formulaConstants.test_run_id = test_run_id;
             var getScenarios = await _context.scenarios.ToListAsync();
+            List<string> users = getScenarios.Select(x => x.user_id).Distinct().ToList();
+
+            foreach (var user in users)
+            {
+                // refreshing user attributes
+                await _usersController.GetSingleUserbyUUID(user);
+                System.Console.WriteLine("got user attributes");
+
+                await _usersController.GetUserDetailsCust(user);
+                System.Console.WriteLine("got user custom attributes");
+
+                // await _usersController.getLogs(user, appId, 750);
+                // System.Console.WriteLine("got log attributes");
+            }
+
             foreach (var scenario in getScenarios)
             {
-                await standaloneModels(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name);
+                await standaloneModels(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name, true);
             }
             
         return Ok(getScenarios.Count + " done");

@@ -133,7 +133,7 @@ namespace EntraGraphAPI.Controllers
         }
 
         [HttpPost("hybrid/{scenarioId}/{userId}/{appId}/{permission_name}")]
-        public async Task<ActionResult> hybridAccess(int scenarioId, string userId, string appId, string permission_name)
+        public async Task<ActionResult> hybridAccess(int scenarioId, string userId, string appId, string permission_name, bool isTest = false)
         {
             // var scenario = await _context.scenarios.Where(x => x.scenario_id == scenarioId).FirstOrDefaultAsync();
             
@@ -145,15 +145,18 @@ namespace EntraGraphAPI.Controllers
             OutputData responseXml = null;
             hybridFinalNGAC getNGACAccess = null;
 
-            // refreshing user attributes
-            await _usersController.GetSingleUserbyUUID(userId);
-            System.Console.WriteLine("got user attributes");
+            if(!isTest)
+            {
+                // refreshing user attributes
+                await _usersController.GetSingleUserbyUUID(userId);
+                System.Console.WriteLine("got user attributes");
 
-            await _usersController.GetUserDetailsCust(userId);
-            System.Console.WriteLine("got user custom attributes");
+                await _usersController.GetUserDetailsCust(userId);
+                System.Console.WriteLine("got user custom attributes");
 
-            // await _usersController.getLogs(userId,appId,750);
-            // System.Console.WriteLine("got log attributes");
+                // await _usersController.getLogs(userId,appId,750);
+                // System.Console.WriteLine("got log attributes");
+            }
 
             var objectAttributes = await _context.getObjectAttributes.FromSqlInterpolated($"Select * from getObjectAttributes({appId}, {permission_name})").ToListAsync();
 
@@ -245,7 +248,7 @@ namespace EntraGraphAPI.Controllers
                             permitCount = getNGACAccess.permitCount,
                             accessCount = getNGACAccess.accessCount,
                             final_trust_factor = (float) totalTrust,
-                            final_result = totalTrust > 0.7 ? true : false
+                            final_result = totalTrust > formulaConstants.totalTrustThreshold ? true : false
                         });
                 }
             }
@@ -258,13 +261,30 @@ namespace EntraGraphAPI.Controllers
                 });
         }
 
-        [HttpPost("testScenarios")]
-        public async Task<ActionResult> testScenarios()
+        [HttpPost("testScenarios/{test_run_id}")]
+        public async Task<ActionResult> testScenarios(int test_run_id)
         {
+            formulaConstants.test_run_id = test_run_id;
+
             var getScenarios = await _context.scenarios.ToListAsync();
+            List<string> users = getScenarios.Select(x => x.user_id).Distinct().ToList();
+
+            foreach (var user in users)
+            {
+                // refreshing user attributes
+                await _usersController.GetSingleUserbyUUID(user);
+                System.Console.WriteLine("got user attributes");
+
+                await _usersController.GetUserDetailsCust(user);
+                System.Console.WriteLine("got user custom attributes");
+
+                // await _usersController.getLogs(user, appId, 750);
+                // System.Console.WriteLine("got log attributes");
+            }
+
             foreach (var scenario in getScenarios)
             {
-                await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name);
+                await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name, true);
             }
             return Ok(getScenarios.Count + " done");
         }

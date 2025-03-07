@@ -14,6 +14,20 @@
     },
     {
         "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added",
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
         "permission_name": "write",
         "subjectAttributePairs": {
             "jobTitle": "Engineer",
@@ -53,6 +67,198 @@
     {
         "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
         "permission_name": "report",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+        },
+        "objectAttributePairs": {
+            "riskLevel": "low"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added",
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added",
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "writeAccess": "enabled",
+            "anomoly": "added"
+        },
+        "subjectNumericConditions": {
+            "devExperience": { "Min": 3, "Max": 5 }
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        },
+        "objectNumericConditions": {}
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "anomoly": "added",
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer",
+            "department": "Engineering",
+            "writeAccess": "enabled",
+            "anomoly": "added"
+        },
+        "subjectNumericConditions": {
+            "devExperience": { "Min": 3, "Max": 5 }
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        },
+        "objectNumericConditions": {}
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "devExperience": "Confidential",
+            "riskLevel": "medium"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "jobTitle": "Sales Associate",
+            "department": "Sales",
+            "officeLocation": "Prince george",
+            "anomoly": "added"
+        },
+        "objectAttributePairs": {
+            "department": "sales",
+            "riskLevel": "high"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "execute",
         "subjectAttributePairs": {
             "jobTitle": "Sales Associate",
             "department": "Sales",
