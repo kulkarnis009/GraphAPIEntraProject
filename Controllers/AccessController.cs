@@ -261,32 +261,40 @@ namespace EntraGraphAPI.Controllers
                 });
         }
 
-        [HttpPost("testScenarios/{test_run_id}")]
-        public async Task<ActionResult> testScenarios(int test_run_id)
+        [HttpPost("testScenarios/{count}")]
+        public async Task<ActionResult> testScenarios(int count)
         {
-            formulaConstants.test_run_id = test_run_id;
-
             var getScenarios = await _context.scenarios.ToListAsync();
             List<string> users = getScenarios.Select(x => x.user_id).Distinct().ToList();
 
             foreach (var user in users)
             {
                 // refreshing user attributes
-                await _usersController.GetSingleUserbyUUID(user);
-                System.Console.WriteLine("got user attributes");
+                // await _usersController.GetSingleUserbyUUID(user);
+                // System.Console.WriteLine("got user attributes");
 
-                await _usersController.GetUserDetailsCust(user);
-                System.Console.WriteLine("got user custom attributes");
+                // await _usersController.GetUserDetailsCust(user);
+                // System.Console.WriteLine("got user custom attributes");
 
                 // await _usersController.getLogs(user, appId, 750);
                 // System.Console.WriteLine("got log attributes");
             }
 
-            foreach (var scenario in getScenarios)
+            int getNextRunId = (await _context.evaluation_Results
+                    .Where(x => x.model_type=="Hybrid")
+                    .MaxAsync(x => (int?)x.test_run_id) ?? 0) + 1;
+            int runLimit = getNextRunId + count - 1;
+            int iter = runLimit - getNextRunId + 1;
+            while(getNextRunId <= runLimit)
             {
-                await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name, true);
+                formulaConstants.test_run_id = getNextRunId;
+                foreach (var scenario in getScenarios)
+                {
+                    await hybridAccess(scenario.scenario_id, scenario.user_id, scenario.resource_id, scenario.permission_name, true);
+                }
+                getNextRunId++;
             }
-            return Ok(getScenarios.Count + " done");
+            return Ok((getScenarios.Count * iter) + " done");
         }
     }
 }
