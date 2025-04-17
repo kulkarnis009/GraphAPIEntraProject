@@ -33,13 +33,18 @@ namespace EntraGraphAPI.Functions
         {
             evaluation_Results.test_run_id = formulaConstants.test_run_id;
             
-            if(evaluation_Results.model_type == "hybrid")
+            if(evaluation_Results.model_type?.ToLower() == "hybrid")
             {
-                if(evaluation_Results.final_trust_factor >= 0.7)
+                decimal? trust = evaluation_Results.final_trust_factor;
+                if (trust == null)
+                {
+                    evaluation_Results.risk_level = "unknown";
+                }
+                else if(trust >= 0.70m)
                 {
                     evaluation_Results.risk_level = "low";
                 }
-                else if(evaluation_Results.final_trust_factor >= 0.4)
+                else if(trust >= 0.40m)
                 {
                     evaluation_Results.risk_level = "medium";
                 }

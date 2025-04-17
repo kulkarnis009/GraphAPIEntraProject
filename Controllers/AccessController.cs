@@ -247,8 +247,8 @@ namespace EntraGraphAPI.Controllers
                             denyThreshold = getNGACAccess.denyThreshold,
                             permitCount = getNGACAccess.permitCount,
                             accessCount = getNGACAccess.accessCount,
-                            final_trust_factor = (float) totalTrust,
-                            final_result = totalTrust > formulaConstants.totalTrustThreshold ? true : false
+                            final_trust_factor = (decimal?)totalTrust,
+                            final_result = (float)Math.Round(totalTrust, 2) > formulaConstants.totalTrustThreshold ? true : false
                         });
                 }
             }

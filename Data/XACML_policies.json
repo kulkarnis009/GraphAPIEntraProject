@@ -7,6 +7,10 @@
             "department": "Engineering",
             "anomoly": "added"
         },
+        "subjectNumericConditions": {
+          "devExperience": { "Min": 3, "Max": 5 },
+          "AppCriticality": { "Min": 1, "Max": 3 }
+      },
         "objectAttributePairs": {
             "devExperience": "Confidential",
             "riskLevel": "medium"
@@ -36,7 +40,8 @@
             "anomoly": "added"
         },
         "subjectNumericConditions": {
-            "devExperience": { "Min": 3, "Max": 5 }
+            "devExperience": { "Min": 3, "Max": 5 },
+            "AppCriticality": { "Min": 1, "Max": 3 }
         },
         "objectAttributePairs": {
             "devExperience": "Confidential",
@@ -139,7 +144,8 @@
             "anomoly": "added"
         },
         "subjectNumericConditions": {
-            "devExperience": { "Min": 3, "Max": 5 }
+            "devExperience": { "Min": 3, "Max": 5 },
+            "AppCriticality": { "Min": 1, "Max": 3 }
         },
         "objectAttributePairs": {
             "devExperience": "Confidential",
@@ -195,7 +201,8 @@
             "anomoly": "added"
         },
         "subjectNumericConditions": {
-            "devExperience": { "Min": 3, "Max": 5 }
+            "devExperience": { "Min": 3, "Max": 5 },
+            "AppCriticality": { "Min": 1, "Max": 3 }
         },
         "objectAttributePairs": {
             "devExperience": "Confidential",
