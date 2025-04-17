@@ -32,6 +32,27 @@ namespace EntraGraphAPI.Functions
         public async Task LogModelDecisions(Evaluation_results evaluation_Results)
         {
             evaluation_Results.test_run_id = formulaConstants.test_run_id;
+            
+            if(evaluation_Results.model_type == "hybrid")
+            {
+                if(evaluation_Results.final_trust_factor >= 0.7)
+                {
+                    evaluation_Results.risk_level = "low";
+                }
+                else if(evaluation_Results.final_trust_factor >= 0.4)
+                {
+                    evaluation_Results.risk_level = "medium";
+                }
+                else
+                {
+                    evaluation_Results.risk_level = "high";
+                }
+            }
+            else
+            {
+                evaluation_Results.risk_level = evaluation_Results.final_result.HasValue ? (bool)evaluation_Results.final_result ? "low" : "high" : "high";
+            }
+
             await _context.evaluation_Results.AddAsync(evaluation_Results);
             await _context.SaveChangesAsync();
         }

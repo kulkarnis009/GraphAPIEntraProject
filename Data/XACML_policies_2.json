@@ -1,0 +1,1202 @@
+[
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm1",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm2",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm3",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm4",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm5",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm6",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm7",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm8",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm9",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm10",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm11",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm12",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm13",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm14",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm15",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm16",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm17",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm18",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm19",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm20",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm21",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm22",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm23",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm24",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
+        "permission_name": "perm25",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EngineeringApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm1",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm2",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm3",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm4",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm5",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm6",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm7",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm8",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm9",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm10",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm11",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm12",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm13",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm14",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm15",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm16",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm17",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm18",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm19",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm20",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm21",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm22",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm23",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm24",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "832b229a-5b81-47a0-8b9b-9e67607f841e",
+        "permission_name": "perm25",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "SalesApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm1",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm2",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm3",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm4",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm5",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm6",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm7",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm8",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm9",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm10",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm11",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm12",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm13",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm14",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm15",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm16",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm17",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm18",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm19",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm20",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm21",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm22",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm23",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm24",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
+        "permission_name": "perm25",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "ManagerApp"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "read",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "write",
+        "subjectAttributePairs": {
+            "devRole": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "view",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "report",
+        "subjectAttributePairs": {
+            "signInActivity": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "execute",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm1",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm2",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm3",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm4",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm5",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm6",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm7",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm8",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm9",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm10",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm11",
+        "subjectAttributePairs": {
+            "department": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm12",
+        "subjectAttributePairs": {
+            "riskState": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm13",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm14",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm15",
+        "subjectAttributePairs": {
+            "writeAccess": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm16",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm17",
+        "subjectAttributePairs": {
+            "officeLocation": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm18",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm19",
+        "subjectAttributePairs": {
+            "riskLevel": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm20",
+        "subjectAttributePairs": {
+            "devExperience": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm21",
+        "subjectAttributePairs": {
+            "riskDetail": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm22",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm23",
+        "subjectAttributePairs": {
+            "isRemoteEnabled": "True"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm24",
+        "subjectAttributePairs": {
+            "userPrincipalName": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    },
+    {
+        "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
+        "permission_name": "perm25",
+        "subjectAttributePairs": {
+            "jobTitle": "Engineer"
+        },
+        "objectAttributePairs": {
+            "resourceType": "EntraGraphAPI"
+        }
+    }
+]

@@ -16,7 +16,7 @@
         "resource_id": "b0383a20-1483-4bfb-b67f-5dffd4e578b3",
         "permission_name": "report",
         "subjectAttributePairs": {
-            "jobTitle": "Engineer",
+            "jobTitle": "Manager",
             "department": "Engineering",
             "anomoly": "added",
             "isRemoteEnabled": "True"
@@ -119,7 +119,7 @@
         "resource_id": "4057d6a6-588a-4fcc-9a3a-e927bc9e2e71",
         "permission_name": "report",
         "subjectAttributePairs": {
-            "jobTitle": "Engineer",
+            "jobTitle": "Manager",
             "department": "Engineering",
             "anomoly": "added",
             "isRemoteEnabled": "True"
@@ -175,7 +175,7 @@
         "resource_id": "edf96cb6-b895-43a7-9005-3f2f6fe01450",
         "permission_name": "report",
         "subjectAttributePairs": {
-            "jobTitle": "Engineer",
+            "jobTitle": "Manager",
             "department": "Engineering",
             "anomoly": "added",
             "isRemoteEnabled": "True"
@@ -270,4 +270,4 @@
             "riskLevel": "high"
         }
     }
-]
+  ]
